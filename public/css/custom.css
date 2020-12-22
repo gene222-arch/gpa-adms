@@ -1,0 +1,106 @@
+/*
+ * Global
+ */
+
+
+/*
+ * Typography
+ */
+
+ a {
+    color: #2c2c2c;
+ }
+
+
+
+/*
+ * * Navbar and Sidebar
+ */
+
+#wrapper
+{
+    overflow-x: hidden;
+}
+
+#layout-sidebar-wrapper
+{
+  min-height: 100vh;
+  margin-left: -15rem;
+  -webkit-transition: margin .25s ease-out;
+  -moz-transition: margin .25s ease-out;
+  -o-transition: margin .25s ease-out;
+  transition: margin .25s ease-out;
+}
+
+#layout-sidebar-wrapper .sidebar-heading
+{
+  padding: 0.875rem 1.25rem;
+  font-size: 1.2rem;
+}
+
+#layout-sidebar-wrapper .list-group
+{
+  width: 15rem;
+}
+
+#page-content-wrapper
+{
+  min-width: 100vw;
+}
+
+#wrapper.toggled #layout-sidebar-wrapper
+{
+  margin-left: 0;
+}
+
+@media (min-width: 768px)
+{
+    #layout-sidebar-wrapper
+    {
+        margin-left: 0;
+    }
+
+    #page-content-wrapper
+    {
+        min-width: 0;
+        width: 100%;
+    }
+
+    #wrapper.toggled #layout-sidebar-wrapper
+    {
+        margin-left: -15rem;
+    }
+}
+
+#layout-sidebar-wrapper a[data-toggle="collapse"]
+{
+    position: relative;
+}
+#layout-sidebar-wrapper a[data-toggle="collapse"]:hover
+{
+    text-decoration: none;
+}
+
+#layout-sidebar-wrapper .dropdown-toggle::after
+{
+    display: none;
+}
+
+
+/* Sidebar Buttons */
+
+.app-navbar #menu-toggle:hover
+{
+    cursor: pointer;
+    opacity: 0.7;
+}
+
+.app-navbar .fa-bars:hover
+{
+    color: #007bff;
+}
+
+.app-navbar .fa-times:hover
+{
+    color: tomato;
+}
