@@ -43,6 +43,72 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+
+
+    /**
+    |--------------------------------------------------------------------------
+    |  Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * belongsToMany Relationship with 'relief_good' table
+     *
+     * @return type Many to Many
+     */
+    public function relief_goods()
+    {
+        return $this->belongsToMany(ReliefGood::class, 'user_relief_good')
+                    ->withPivot(
+                        'constituent_id',
+                        'is_approved', 'approved_at',
+                        'is_received', 'received_at',
+                        'is_sent', 'sent_at'
+                    )
+                    ->orderByPivot('created_at', 'desc')
+                    ->withTimestamps();
+    }
+
+    public function relief_goods_by_constituents()
+    {
+        return $this->belongsToMany(ReliefGood::class, 'user_relief_good', 'constituent_id', 'relief_good_id')
+                    ->withPivot(
+                        'user_id',
+                        'is_sent', 'sent_at'
+                    )
+                    ->with('users')
+                    ->withTimestamps()
+                    ->orderByPivot('created_at', 'desc');
+    }
+
+    /**
+    |--------------------------------------------------------------------------
+    | Custom Functions for Roles
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Fetch all users with a role of 'volunteer'
+     *
+     * @return collection
+     */
+    public function volunteers()
+    {
+        return $this->whereHas('roles', fn($q) => $q->where('name', 'volunteer'))->get();
+    }
+
+    /**
+     * Fetch all users with a role of 'constituent'
+     *
+     * @return collection
+     */
+    public function constituents()
+    {
+        return $this->whereHas('roles', fn($q) => $q->where('name', 'constituent'))
+                    ->orderBy('name', 'asc')
+                    ->get();
+    }
+
     /**
      * Check if the user has a role of 'Volunteer'
      *
@@ -53,40 +119,40 @@ class User extends Authenticatable
         return $this->hasRole('volunteer');
     }
 
+    /**
+     * Check if the user has a role of 'Constituent'
+     *
+     * @return boolean
+     */
     public function isConstituent(): bool
     {
         return $this->hasRole('constituent');
     }
 
     /**
+    |--------------------------------------------------------------------------
+    | relief_goods Table Relationship
+    |--------------------------------------------------------------------------
+    */
+
+    /**
+     * Attach new relief data to Pivot Table ("user_relief_good")
      *
-     * @return type Many to Many
+     *
      */
-    public function relief_goods()
+    public function giveReliefAssistanceTo($reliefGood, $constituent_id)
     {
-        return $this->belongsToMany(ReliefGood::class, 'user_relief_good')
-                    ->withPivot(
-                        'is_approved', 'approved_at',
-                        'is_received', 'received_at',
-                        'is_sent', 'sent_at')
-                    ->withTimestamps()
-                    ->orderByPivot('created_at', 'desc');
+        return $this->relief_goods()->attach($reliefGood, [ 'constituent_id' => $constituent_id ]);
     }
 
     /**
-     * ? Attach/Sync new relief data to Pivot Table ("user_relief_good")
+     * Detach a users relief assistance in the Pivot Table("user_relief_good")
+     *
+     * @return array
      */
-    public function giveReliefAssistanceTo($reliefGood): void
+    public function removeReliefAssistanceTo($constituent_id)
     {
-        $this->relief_goods()->syncWithoutDetaching($reliefGood);
-    }
-
-    /**
-     * ? Detach a users relief assistance in the Pivot Table("user_relief_good")
-     */
-    public function removeReliefAssistanceTo($id): void
-    {
-        $this->relief_goods()->detach($id);
+        return $this->relief_goods()->detach($constituent_id);
     }
 
     /**

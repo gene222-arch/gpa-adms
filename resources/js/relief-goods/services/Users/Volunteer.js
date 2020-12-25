@@ -2,6 +2,11 @@ import Axios from "axios";
 import Swal from 'sweetalert2';
 import { toFormData, route } from '../../components/Helpers/FormData.js'
 
+
+/**
+ * ! GET METHODS
+ */
+
 /**
  * Fetch a lists
  */
@@ -11,6 +16,18 @@ export const index = async () =>
         .then(res => res.data)
         .catch(err => err.response.data);
 };
+
+export const getConstituents = async () =>
+{
+    return await Axios.get(route('/vol.relief-assistance.constituents-lists'))
+        .then(res => res.data)
+        .catch(err => err.response.data);
+}
+
+
+/**
+ * ! POST METHODS
+ */
 
 /**
  * Store
@@ -37,6 +54,12 @@ export const store = async (payload) =>
         });
 };
 
+
+/**
+ * ! PUT/PATCH METHODS
+ */
+
+
 /**
  * Update
  * @param {*} payload
@@ -47,6 +70,12 @@ export const update = async (payload) =>
         .then(res => console.log(res))
         .catch(err => console.error(err.response.data));
 };
+
+
+
+/**
+ * ! DELETE METHODS
+ */
 
 /**
  * Delete

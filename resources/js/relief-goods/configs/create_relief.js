@@ -25,10 +25,11 @@ export default
         },
         {
             name: 'to',
-            type: 'text',
+            type: 'select',
             label: 'To',
-            placeholder: 'To...',
+            optionDefault: 'Donate to...',
             className: 'form-control'
         },
+
     ]
 };

@@ -10,10 +10,9 @@ use App\Http\Controllers\Auth\Admin\ResetPasswordController as AdminResetPasswor
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardCtrl;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\UserReliefManagementController;
-use App\Http\Controllers\User\VolunteerDashboardController;
-use App\Http\Controllers\User\ConstituentDashboardController;
-use App\Http\Controllers\ReliefGoodController;
-
+use App\Http\Controllers\User\VolunteerController;
+use App\Http\Controllers\User\ConstituentsController;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -30,11 +29,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-/**
- * Todo
- * Test the websocket notif
- */
-
 Route::get('/event', function () {
     event(new ReceivedReliefAsstEvent('New Thanks bro'));
     echo 'Mail sent!';
@@ -48,30 +42,53 @@ Route::get('/listen', function () {
 
 /*
 |--------------------------------------------------------------------------
-? Users: Volunteers, Constituents
+? Users: Authentication, Volunteers Controller, Constituents Controller
 |--------------------------------------------------------------------------
  */
 
 /**
- * ? Users Auth: Login, Register, ResetPassword Routes
+ * ! Users Auth: Login, Register, ResetPassword Routes
  */
-
 Auth::routes();
 
 /**
- * ! Constituent
+ * ! ConstituentsController
+ *
+ * User
+ * Roles: 'constituent'
  */
+
+Route::get('/auth-user', function (Request $request) {
+
+    if ($request->wantsJson())
+    {
+        return response()->json(Auth::user());
+    }
+});
+
 Route::group([
     'prefix' => 'cons',
     'as' => 'constituent.',
     'middleware' => 'role:constituent'
 ], function ()
 {
-    Route::get('/dashboard', [ConstituentDashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [ConstituentsController::class, 'dashboard'])->name('dashboard');
+
+    Route::group([
+        'prefix' => 'relief-asst'
+    ], function ()
+    {
+        Route::get('/receive/{user?}', [ConstituentsController::class, 'showReceivedReliefAsstLists'])->name('relief-asst.receive');
+    });
+
 });
 
+
 /**
- * ! Volunteers
+ * ! VolunteersControllers
+ *
+ * User
+ * Roles: 'volunteer'
  */
 Route::group([
     'prefix' => 'vol',
@@ -79,15 +96,43 @@ Route::group([
     'middleware' => 'role:volunteer'
 ], function ()
 {
-    Route::get('/dashboard', [VolunteerDashboardController::class, 'index'])->name('dashboard');
+    // Dashboard
+    Route::get('/dashboard', [VolunteerController::class, 'dashboard'])->name('dashboard');
 
     Route::group([
             'prefix' => 'relief-assistance',
-            'as' => 'relief.'], function () {
-        Route::get('/', [ReliefGoodController::class, 'index'])->name('relief-asst-list');
-        Route::post('/donate', [ReliefGoodController::class, 'store'])->name('relief-asst-store');
-        Route::put('/donate', [ReliefGoodController::class, 'update'])->name('relief-asst-update');
-        Route::delete('/', [ReliefGoodController::class, 'destroy'])->name('relief-asst-destroy');
+            'as' => 'relief.'
+        ], function () {
+
+        /**
+         * * GET METHODS
+         */
+
+        // Fetch user role relief asst. lists
+        Route::get('/', [VolunteerController::class, 'showReliefAsstLists'])->name('relief-asst-list');
+        // Fetch user with constituent role name
+        Route::get('/constituents-lists', [VolunteerController::class, 'showConstituentsLists']);
+
+
+        /**
+         * * POST METHODS
+         */
+
+        Route::post('/donate', [VolunteerController::class, 'store'])->name('relief-asst-store');
+
+
+        /**
+         * * PUT/PATCH METHODS
+         */
+
+        Route::put('/donate', [VolunteerController::class, 'update'])->name('relief-asst-update');
+
+
+        /**
+         * * DELETE METHODS
+         */
+
+        Route::delete('/', [VolunteerController::class, 'destroy'])->name('relief-asst-destroy');
     });
 });
 

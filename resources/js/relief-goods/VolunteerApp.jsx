@@ -1,20 +1,21 @@
 import React,{ useState, useRef, useEffect } from 'react';
-import { index, store, update, destroy } from './services/Users/Volunteer'
+import { index, getConstituents, store, update, destroy } from './services/Users/Volunteer'
 import createFormFields from './configs/create_relief'
 import AutoForm from './components/Forms/AutoForm'
 import ReliefSentList from './components/Tables/ReliefSentList';
 import * as Alert from './components/Helpers/Alert.js'
 
 
-const App = () =>
+const VolunteerApp = () =>
 {
-    console.log('Render App');
+    console.log('Render VolunteerApp');
 
 /**
  * ! States
  */
     const [ reliefLists, setReliefLists ] = useState([]); // Display
     const [ reliefList, setReliefList ] = useState({}); // Update
+    const [ constituents, setConstituents ] = useState([]); // Select options
     const [ errorMessages, setErrorMessages ] = useState({}); // Validation
     const [ navigate, setNavigate ] = useState('report-link'); // Navigation
     const [ loading, setLoading ] = useState(false); // Loading
@@ -30,26 +31,33 @@ const App = () =>
     const reportRef = useRef('');
 
 
+
+
 /** * * * * * * * * *
- * ! Functions
+ * ! Database
  * * * * * * * * * */
 
-    /**
-     *  ? Database
-     */
 
-    // Index
     const getReliefLists = async () =>
     {
-        setLoading(true);
+        setLoading(true); // Loading
+
         const result = await index();
         result
-            ?  setReliefLists(result)
+            ? setReliefLists(result)
             : setReliefLists([])
-        setLoading(false);
+
+        setLoading(false); // Loaded
     };
 
-    // Store
+    const getConstituentsLists = async () =>
+    {
+        const result = await getConstituents();
+        result
+            ? setConstituents(result)
+            : setConstituents([]);
+    }
+
     const handleOnStore = async (payload) =>
     {
         const result = await store(payload);
@@ -65,20 +73,18 @@ const App = () =>
         }
     }
 
-    // Edit
     const handleOnEdit = (id) =>
     {
         const findById = reliefLists.find(reliefList => reliefList.id === id);
+        console.log(findById);
         findById ? setReliefList(findById) : setReliefList({});
     }
 
-    // Update
     const handleOnUpdate = async (payload) =>
     {
         console.log(payload);
     }
 
-    // Destroy
     const handleOnDelete = async (id) =>
     {
        Swal.fire({
@@ -106,24 +112,33 @@ const App = () =>
         });
     }
 
+
 /** * * * * * * * * * * * * *
  * ! Pusher Notif
  * * * * * * * * * * * * * */
 
     const receivedReliefAsstEvent = () =>
     {
-        Echo.join('chat')
-            .here((users) =>
+        // Route: channel.php -- for BroadCast channel
+        // Echo.join('chat')
+        //     .here((users) =>
+        //     {
+        //         console.log(users);
+        //     })
+        //     .joining((user) =>
+        //     {
+        //         console.log(`${ user.name } has joined`);
+        //     })
+        //     .leaving((user) =>
+        //     {
+        //         console.log(`${ user.name } has leaved`);
+        //     });
+
+        Echo.channel('geneTVChannel')
+            .listen('ReceivedReliefAsstEvent', (e) =>
             {
-                console.log(users);
-            })
-            .joining((user) =>
-            {
-                console.log(`${ user.name } has joined`);
-            })
-            .leaving((user) =>
-            {
-                console.log(`${ user.name } has leaved`);
+                console.log(e.message)
+                alert(e.message)
             });
     };
 
@@ -187,6 +202,7 @@ const App = () =>
     useEffect(() =>
     {
         receivedReliefAsstEvent();
+        getConstituentsLists();
     }, []);
 
 
@@ -226,6 +242,7 @@ const App = () =>
                                         form={ createFormFields }
                                         onSubmit={ handleOnStore }
                                         errorMessages = { errorMessages }
+                                        options={ constituents }
                                     />
                                     : <>
                                         <ReliefSentList
@@ -250,7 +267,7 @@ const App = () =>
     );
 }
 
-export default React.memo(App);
+export default React.memo(VolunteerApp);
 
 /**
  * ? So when we are exporting an entire array of objects

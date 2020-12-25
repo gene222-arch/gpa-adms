@@ -15,8 +15,9 @@ return [
 
         'port' => env('LARAVEL_WEBSOCKETS_PORT', 6001),
 
-        'path' => 'laravel-websockets',
+        'path' => 'websockets',
 
+        // On production remove authorize class
         'middleware' => [
             'web',
             \BeyondCode\LaravelWebSockets\Dashboard\Http\Middleware\Authorize::class,
@@ -195,7 +196,7 @@ return [
         |
         */
 
-        'interval_in_seconds' => 60,
+        'interval_in_seconds' => 60 * 5,
 
         /*
         |--------------------------------------------------------------------------
@@ -207,7 +208,7 @@ return [
         |
         */
 
-        'delete_statistics_older_than_days' => 60,
+        'delete_statistics_older_than_days' => 30   ,
 
     ],
 

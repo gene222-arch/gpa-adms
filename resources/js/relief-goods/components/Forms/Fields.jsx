@@ -7,7 +7,7 @@ import ErrorMessage from '../Messages/ErrorMessage'
  * @param onChange event
  * @param errorMessages array
  */
-const Field = ({field, onChange, errorMessages = {}}) =>
+const Field = ({field, onChange, errorMessages = {}, options}) =>
 {
     console.log('Render Field');
 
@@ -18,17 +18,28 @@ const Field = ({field, onChange, errorMessages = {}}) =>
      * ! Error Messages Configuration
      */
     const isErrorExists = (elementName) => errorMessagesKeys.find(errKey => errKey === elementName);
+
+    /**
+     * Setting the class name as invalid if error key match the elementName
+     */
     const setIsInvalid = (elementName) =>
     {
         return isErrorExists(elementName)
             ? 'form-control is-invalid'
             : 'form-control';
     };
+
+    /**
+     * Fetching the corresponding error message
+     *
+     * @param {} elementName
+     */
     const getErrMessage = (elementName) =>
     {
         const errKey = isErrorExists(elementName);
         return errKey ? errorMessages[errKey] : '';
     };
+
 
     return (
         <div className='form-group'>
@@ -44,6 +55,20 @@ const Field = ({field, onChange, errorMessages = {}}) =>
                             return <textarea { ...attributes }
                                 className={ setIsInvalid(attributes.name) }
                                 onChange={ onChange }>{ attributes.placeholder }</textarea>
+                        break;
+                    case 'select':
+                            return (
+                                <select { ...attributes }
+                                    className={ setIsInvalid(attributes.name) }
+                                    onChange={ onChange }>
+                                    <option key={'uniqueKey'} value="">{ attributes.optionDefault }</option>
+                                    {
+                                        options.map(option => (
+                                            <option key={option.id} value={ option.id }> { option.name } </option>
+                                        ))
+                                    }
+                                </select>
+                            )
                         break;
 
                     default:

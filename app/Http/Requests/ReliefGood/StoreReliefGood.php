@@ -28,7 +28,14 @@ class StoreReliefGood extends BaseRequest
             'category' => ['required'],
             'name' => ['required', 'string'],
             'quantity' => ['required', 'integer', 'min:1'],
-            'to' => ['required', 'string']
+            'to' => ['required', 'exists:users,id']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'to.exists' => 'This constituent does not exists',
         ];
     }
 }

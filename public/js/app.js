@@ -76319,19 +76319,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _relief_goods_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./relief-goods/App */ "./resources/js/relief-goods/App.jsx");
-/* harmony import */ var _relief_goods_AdminApp__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./relief-goods/AdminApp */ "./resources/js/relief-goods/AdminApp.jsx");
+/* harmony import */ var _relief_goods_VolunteerApp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./relief-goods/VolunteerApp */ "./resources/js/relief-goods/VolunteerApp.jsx");
+/* harmony import */ var _relief_goods_ConstituentApp__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./relief-goods/ConstituentApp */ "./resources/js/relief-goods/ConstituentApp.jsx");
+/* harmony import */ var _relief_goods_AdminApp__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./relief-goods/AdminApp */ "./resources/js/relief-goods/AdminApp.jsx");
+
 
 
 
 
 
 if (document.getElementById('relief')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_App__WEBPACK_IMPORTED_MODULE_2__["default"], null), document.getElementById('relief'));
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_VolunteerApp__WEBPACK_IMPORTED_MODULE_2__["default"], null), document.getElementById('relief'));
+}
+
+if (document.getElementById('my-received-relief-asst-lists')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_ConstituentApp__WEBPACK_IMPORTED_MODULE_3__["default"], null), document.getElementById('my-received-relief-asst-lists'));
 }
 
 if (document.getElementById('volunteer-relief-assistance-mngmt')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_AdminApp__WEBPACK_IMPORTED_MODULE_3__["default"], null), document.getElementById('volunteer-relief-assistance-mngmt'));
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_AdminApp__WEBPACK_IMPORTED_MODULE_4__["default"], null), document.getElementById('volunteer-relief-assistance-mngmt'));
 }
 
 /***/ }),
@@ -76404,7 +76410,8 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: 'pusher',
-  key: 'myPusherKey',
+  key: "myPusherKey",
+  cluster: "mt1",
   wsHost: window.location.hostname,
   wsPort: 6001,
   forceTLS: false,
@@ -76761,10 +76768,239 @@ var AdminApp = function AdminApp() {
 
 /***/ }),
 
-/***/ "./resources/js/relief-goods/App.jsx":
-/*!*******************************************!*\
-  !*** ./resources/js/relief-goods/App.jsx ***!
-  \*******************************************/
+/***/ "./resources/js/relief-goods/ConstituentApp.jsx":
+/*!******************************************************!*\
+  !*** ./resources/js/relief-goods/ConstituentApp.jsx ***!
+  \******************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _services_Users_Constituent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./services/Users/Constituent */ "./resources/js/relief-goods/services/Users/Constituent.js");
+/* harmony import */ var _relief_goods_components_Tables_ReliefReceivedLists__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../relief-goods/components/Tables/ReliefReceivedLists */ "./resources/js/relief-goods/components/Tables/ReliefReceivedLists.jsx");
+
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+
+
+
+var ConstituentApp = function ConstituentApp() {
+  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
+      _useState2 = _slicedToArray(_useState, 2),
+      authenticatedUser = _useState2[0],
+      setAuthenticatedUser = _useState2[1];
+
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
+      _useState4 = _slicedToArray(_useState3, 2),
+      receivedReliefAsst = _useState4[0],
+      setReceivedReliefAsst = _useState4[1];
+
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
+      _useState6 = _slicedToArray(_useState5, 2),
+      reliefAsstInfo = _useState6[0],
+      setReliefAsstInfo = _useState6[1];
+
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState8 = _slicedToArray(_useState7, 2),
+      isLoading = _useState8[0],
+      setIsLoading = _useState8[1];
+  /**
+   * Pagination
+   */
+
+
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(1),
+      _useState10 = _slicedToArray(_useState9, 2),
+      currentPage = _useState10[0],
+      setCurrentPage = _useState10[1];
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(5),
+      _useState12 = _slicedToArray(_useState11, 2),
+      dataCountPerPage = _useState12[0],
+      setDataCountPerPage = _useState12[1];
+
+  var indexOfLastPage = currentPage * dataCountPerPage;
+  var indexOfFirstPage = indexOfLastPage - dataCountPerPage;
+  var currentPageData = receivedReliefAsst.slice(indexOfFirstPage, indexOfLastPage);
+
+  var paginate = function paginate(pageNumber) {
+    return setCurrentPage(pageNumber);
+  };
+
+  var nextPage = function nextPage() {
+    return setCurrentPage(function (prevPageNumber) {
+      return prevPageNumber + 1;
+    });
+  };
+
+  var prevPage = function prevPage() {
+    return setCurrentPage(function (prevPageNumber) {
+      return prevPageNumber - 1;
+    });
+  };
+  /*
+  |--------------------------------------------------------------------------
+  ? Database
+  |--------------------------------------------------------------------------
+  */
+
+
+  var getAuthenticatedUser = /*#__PURE__*/function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+      var result;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.next = 2;
+              return Object(_services_Users_Constituent__WEBPACK_IMPORTED_MODULE_2__["fetchAuthenticatedUser"])();
+
+            case 2:
+              result = _context.sent;
+              result ? setAuthenticatedUser(result) : setAuthenticatedUser({});
+
+            case 4:
+            case "end":
+              return _context.stop();
+          }
+        }
+      }, _callee);
+    }));
+
+    return function getAuthenticatedUser() {
+      return _ref.apply(this, arguments);
+    };
+  }();
+
+  var getUserReceivedReliefAsst = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      var result;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              setIsLoading(true);
+              _context2.next = 3;
+              return Object(_services_Users_Constituent__WEBPACK_IMPORTED_MODULE_2__["fetchUserReceivedReliefAsstLists"])();
+
+            case 3:
+              result = _context2.sent;
+              result ? setReceivedReliefAsst(result) : setReceivedReliefAsst([]);
+              setIsLoading(false);
+
+            case 6:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function getUserReceivedReliefAsst() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+  /*
+  |--------------------------------------------------------------------------
+  ? Functions
+  |--------------------------------------------------------------------------
+  */
+
+
+  var onClickShowReliefAsstInfo = function onClickShowReliefAsstInfo(id) {
+    var result = currentPageData.find(function (reliefGood) {
+      return reliefGood.id === id;
+    });
+    result ? setReliefAsstInfo(result) : setReliefAsstInfo({});
+  };
+  /*
+  |--------------------------------------------------------------------------
+  ? Laravel - Events
+  |--------------------------------------------------------------------------
+  */
+
+
+  var listenToNewReliefAsstEvent = function listenToNewReliefAsstEvent() {
+    Echo["private"]('cons.relief-asst.receive.' + authenticatedUser.id).listen('NewReliefAssistance', function (reliefAsst) {
+      console.log(reliefAsst);
+      setReceivedReliefAsst(function (prevVal) {
+        return [].concat(_toConsumableArray(prevVal), [reliefAsst]);
+      });
+      alert('Successfully inserted');
+    });
+  };
+  /**
+   * Side effects
+   */
+
+
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    getUserReceivedReliefAsst();
+    getAuthenticatedUser();
+  }, []);
+  Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
+    listenToNewReliefAsstEvent();
+    console.log(authenticatedUser);
+  }, [authenticatedUser]);
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    className: "card-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_relief_goods_components_Tables_ReliefReceivedLists__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    receivedReliefAsst: currentPageData,
+    onClickShowReliefAsstInfo: onClickShowReliefAsstInfo,
+    reliefAsstInfo: reliefAsstInfo,
+    dataCountPerPage: dataCountPerPage,
+    totalCountOfData: receivedReliefAsst.length,
+    currentPage: currentPage,
+    paginate: paginate,
+    nextPage: nextPage,
+    prevPage: prevPage,
+    isLoading: isLoading
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    className: "card"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
+    className: "card-body"
+  })));
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (ConstituentApp);
+
+/***/ }),
+
+/***/ "./resources/js/relief-goods/VolunteerApp.jsx":
+/*!****************************************************!*\
+  !*** ./resources/js/relief-goods/VolunteerApp.jsx ***!
+  \****************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -76804,8 +77040,8 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var App = function App() {
-  console.log('Render App');
+var VolunteerApp = function VolunteerApp() {
+  console.log('Render VolunteerApp');
   /**
    * ! States
    */
@@ -76822,37 +77058,43 @@ var App = function App() {
       setReliefList = _useState4[1]; // Update
 
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState6 = _slicedToArray(_useState5, 2),
-      errorMessages = _useState6[0],
-      setErrorMessages = _useState6[1]; // Validation
+      constituents = _useState6[0],
+      setConstituents = _useState6[1]; // Select options
 
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])('report-link'),
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
       _useState8 = _slicedToArray(_useState7, 2),
-      navigate = _useState8[0],
-      setNavigate = _useState8[1]; // Navigation
+      errorMessages = _useState8[0],
+      setErrorMessages = _useState8[1]; // Validation
 
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])('report-link'),
       _useState10 = _slicedToArray(_useState9, 2),
-      loading = _useState10[0],
-      setLoading = _useState10[1]; // Loading
+      navigate = _useState10[0],
+      setNavigate = _useState10[1]; // Navigation
+
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+      _useState12 = _slicedToArray(_useState11, 2),
+      loading = _useState12[0],
+      setLoading = _useState12[1]; // Loading
 
   /**
    * ! Pagination States
    */
 
 
-  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(1),
-      _useState12 = _slicedToArray(_useState11, 2),
-      currentPage = _useState12[0],
-      setCurrentPage = _useState12[1]; // Page = 1
+  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(1),
+      _useState14 = _slicedToArray(_useState13, 2),
+      currentPage = _useState14[0],
+      setCurrentPage = _useState14[1]; // Page = 1
 
 
-  var _useState13 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(2),
-      _useState14 = _slicedToArray(_useState13, 1),
-      dataCountPerPage = _useState14[0]; // Page 1 = No. of Data = 2
+  var _useState15 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(2),
+      _useState16 = _slicedToArray(_useState15, 1),
+      dataCountPerPage = _useState16[0]; // Page 1 = No. of Data = 2
 
   /**
    * ! Refs
@@ -76862,13 +77104,8 @@ var App = function App() {
   var createRef = Object(react__WEBPACK_IMPORTED_MODULE_1__["useRef"])('');
   var reportRef = Object(react__WEBPACK_IMPORTED_MODULE_1__["useRef"])('');
   /** * * * * * * * * *
-   * ! Functions
+   * ! Database
    * * * * * * * * * */
-
-  /**
-   *  ? Database
-   */
-  // Index
 
   var getReliefLists = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
@@ -76877,14 +77114,15 @@ var App = function App() {
         while (1) {
           switch (_context.prev = _context.next) {
             case 0:
-              setLoading(true);
+              setLoading(true); // Loading
+
               _context.next = 3;
               return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["index"])();
 
             case 3:
               result = _context.sent;
               result ? setReliefLists(result) : setReliefLists([]);
-              setLoading(false);
+              setLoading(false); // Loaded
 
             case 6:
             case "end":
@@ -76897,21 +77135,47 @@ var App = function App() {
     return function getReliefLists() {
       return _ref.apply(this, arguments);
     };
-  }(); // Store
+  }();
 
-
-  var handleOnStore = /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(payload) {
+  var getConstituentsLists = /*#__PURE__*/function () {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
       var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
         while (1) {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["store"])(payload);
+              return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["getConstituents"])();
 
             case 2:
               result = _context2.sent;
+              result ? setConstituents(result) : setConstituents([]);
+
+            case 4:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }));
+
+    return function getConstituentsLists() {
+      return _ref2.apply(this, arguments);
+    };
+  }();
+
+  var handleOnStore = /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(payload) {
+      var result;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.next = 2;
+              return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["store"])(payload);
+
+            case 2:
+              result = _context3.sent;
 
               if (result !== true) {
                 setErrorMessages(result);
@@ -76923,53 +77187,51 @@ var App = function App() {
 
             case 4:
             case "end":
-              return _context2.stop();
-          }
-        }
-      }, _callee2);
-    }));
-
-    return function handleOnStore(_x) {
-      return _ref2.apply(this, arguments);
-    };
-  }(); // Edit
-
-
-  var handleOnEdit = function handleOnEdit(id) {
-    var findById = reliefLists.find(function (reliefList) {
-      return reliefList.id === id;
-    });
-    findById ? setReliefList(findById) : setReliefList({});
-  }; // Update
-
-
-  var handleOnUpdate = /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(payload) {
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
-        while (1) {
-          switch (_context3.prev = _context3.next) {
-            case 0:
-              console.log(payload);
-
-            case 1:
-            case "end":
               return _context3.stop();
           }
         }
       }, _callee3);
     }));
 
-    return function handleOnUpdate(_x2) {
+    return function handleOnStore(_x) {
       return _ref3.apply(this, arguments);
     };
-  }(); // Destroy
+  }();
 
+  var handleOnEdit = function handleOnEdit(id) {
+    var findById = reliefLists.find(function (reliefList) {
+      return reliefList.id === id;
+    });
+    console.log(findById);
+    findById ? setReliefList(findById) : setReliefList({});
+  };
 
-  var handleOnDelete = /*#__PURE__*/function () {
-    var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(id) {
+  var handleOnUpdate = /*#__PURE__*/function () {
+    var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(payload) {
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
         while (1) {
           switch (_context4.prev = _context4.next) {
+            case 0:
+              console.log(payload);
+
+            case 1:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }));
+
+    return function handleOnUpdate(_x2) {
+      return _ref4.apply(this, arguments);
+    };
+  }();
+
+  var handleOnDelete = /*#__PURE__*/function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(id) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
             case 0:
               Swal.fire({
                 title: 'Are you sure?',
@@ -76992,14 +77254,14 @@ var App = function App() {
 
             case 1:
             case "end":
-              return _context4.stop();
+              return _context5.stop();
           }
         }
-      }, _callee4);
+      }, _callee5);
     }));
 
     return function handleOnDelete(_x3) {
-      return _ref4.apply(this, arguments);
+      return _ref5.apply(this, arguments);
     };
   }();
   /** * * * * * * * * * * * * *
@@ -77008,12 +77270,23 @@ var App = function App() {
 
 
   var receivedReliefAsstEvent = function receivedReliefAsstEvent() {
-    Echo.join('chat').here(function (users) {
-      console.log(users);
-    }).joining(function (user) {
-      console.log("".concat(user.name, " has joined"));
-    }).leaving(function (user) {
-      console.log("".concat(user.name, " has leaved"));
+    // Route: channel.php -- for BroadCast channel
+    // Echo.join('chat')
+    //     .here((users) =>
+    //     {
+    //         console.log(users);
+    //     })
+    //     .joining((user) =>
+    //     {
+    //         console.log(`${ user.name } has joined`);
+    //     })
+    //     .leaving((user) =>
+    //     {
+    //         console.log(`${ user.name } has leaved`);
+    //     });
+    Echo.channel('geneTVChannel').listen('ReceivedReliefAsstEvent', function (e) {
+      console.log(e.message);
+      alert(e.message);
     });
   };
   /**
@@ -77086,6 +77359,7 @@ var App = function App() {
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     receivedReliefAsstEvent();
+    getConstituentsLists();
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "container-fluid"
@@ -77127,7 +77401,8 @@ var App = function App() {
   }, "With supporting text below as a natural lead-in to additional content."), navigate === 'create-relief-link' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Forms_AutoForm__WEBPACK_IMPORTED_MODULE_4__["default"], {
     form: _configs_create_relief__WEBPACK_IMPORTED_MODULE_3__["default"],
     onSubmit: handleOnStore,
-    errorMessages: errorMessages
+    errorMessages: errorMessages,
+    options: constituents
   }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Tables_ReliefSentList__WEBPACK_IMPORTED_MODULE_5__["default"], {
     reliefLists: currentPageData,
     handleOnEdit: handleOnEdit,
@@ -77142,7 +77417,7 @@ var App = function App() {
   })))))));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.memo(App));
+/* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.memo(VolunteerApp));
 /**
  * ? So when we are exporting an entire array of objects
  * ? then you can import it using any kind of names
@@ -77236,16 +77511,28 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 
+/**
+ * @function Button
+ */
+
 var ModalButton = /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.forwardRef(function (props, ref) {
+  var icon = function icon() {
+    if (props.defaultIcon) {
+      return props.defaultIcon;
+    }
+
+    return props.status ? "".concat(props.successIcon, " text-success ") : props.failIcon;
+  };
+
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     ref: ref,
     className: "btn ".concat(props.className),
-    onClick: props.onClick,
     "data-toggle": "modal",
-    "data-target": "#".concat(props.target)
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
-    className: "far fa-".concat(props.action)
-  }), " ");
+    "data-target": props.target,
+    onClick: props.onClick
+  }, props.icon ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("i", {
+    className: icon()
+  }) : props.btnName);
 });
 /* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.memo(ModalButton));
 
@@ -77287,14 +77574,22 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 /**
  * @function AutoForm
- * @param { form }
+ *
+ * @param { form } object
+ * @param { onSubmit } function
+ * @param { errorMessages } object
+ * @param { options } array
  */
 
 var AutoForm = function AutoForm(_ref) {
   var form = _ref.form,
       onSubmit = _ref.onSubmit,
-      errorMessages = _ref.errorMessages;
+      errorMessages = _ref.errorMessages,
+      options = _ref.options;
   console.log('Render Auto Form');
+  /**
+   * Returns an array of objects
+   */
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(form.fields.map(function (field) {
     return _objectSpread(_objectSpread({}, field), {}, {
@@ -77306,6 +77601,7 @@ var AutoForm = function AutoForm(_ref) {
       setFields = _useState2[1];
   /**
    * @function handleOnChange
+   *
    * @param e
    */
 
@@ -77319,10 +77615,12 @@ var AutoForm = function AutoForm(_ref) {
         value: value
       }) : field;
     });
+    console.log("".concat(name, " = ").concat(value));
     setFields(newData);
   };
   /**
    * @function handleOnSubmit
+   *
    * @param e
    */
 
@@ -77332,22 +77630,39 @@ var AutoForm = function AutoForm(_ref) {
     var formData = fields.reduce(function (fields, field) {
       return _objectSpread(_objectSpread({}, fields), {}, _defineProperty({}, field.name, field.value));
     }, {});
+    /**
+     * @argument object
+     */
+
     onSubmit(formData);
 
     if (!Object.keys(errorMessages).length) {
+      /** Reset each field value as empty */
+      setFields(form.fields.map(function (field) {
+        return _objectSpread(_objectSpread({}, field), {}, {
+          value: ''
+        });
+      }));
+      /** Reset the form */
+
       e.target.reset();
     }
   };
 
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_0___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("form", {
     onSubmit: handleOnSubmit
-  }, form.fields.map(function (field, key) {
-    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Fields__WEBPACK_IMPORTED_MODULE_1__["default"], {
-      key: key,
-      field: field,
-      onChange: handleOnChange,
-      errorMessages: errorMessages
-    });
+  }, fields.map(function (field, key) {
+    return (
+      /*#__PURE__*/
+      // * Modified from form.fields.map => fields.map
+      react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Fields__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        key: key,
+        field: field,
+        onChange: handleOnChange,
+        errorMessages: errorMessages,
+        options: options
+      })
+    );
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
     className: "btn-success",
     btnName: "Submit"
@@ -77389,7 +77704,8 @@ var Field = function Field(_ref) {
   var field = _ref.field,
       onChange = _ref.onChange,
       _ref$errorMessages = _ref.errorMessages,
-      errorMessages = _ref$errorMessages === void 0 ? {} : _ref$errorMessages;
+      errorMessages = _ref$errorMessages === void 0 ? {} : _ref$errorMessages,
+      options = _ref.options;
   console.log('Render Field');
 
   var label = field.label,
@@ -77405,10 +77721,20 @@ var Field = function Field(_ref) {
       return errKey === elementName;
     });
   };
+  /**
+   * Setting the class name as invalid if error key match the elementName
+   */
+
 
   var setIsInvalid = function setIsInvalid(elementName) {
     return isErrorExists(elementName) ? 'form-control is-invalid' : 'form-control';
   };
+  /**
+   * Fetching the corresponding error message
+   *
+   * @param {} elementName
+   */
+
 
   var getErrMessage = function getErrMessage(elementName) {
     var errKey = isErrorExists(elementName);
@@ -77427,6 +77753,21 @@ var Field = function Field(_ref) {
           className: setIsInvalid(attributes.name),
           onChange: onChange
         }), attributes.placeholder);
+        break;
+
+      case 'select':
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("select", _extends({}, attributes, {
+          className: setIsInvalid(attributes.name),
+          onChange: onChange
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+          key: 'uniqueKey',
+          value: ""
+        }, attributes.optionDefault), options.map(function (option) {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
+            key: option.id,
+            value: option.id
+          }, " ", option.name, " ");
+        }));
         break;
 
       default:
@@ -77742,14 +78083,14 @@ var AdminReliefAsstLists = function AdminReliefAsstLists(props) {
         }
       })));
     });
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pagination__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }))), !loading && props.reliefListsTotalCount ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pagination__WEBPACK_IMPORTED_MODULE_3__["default"], {
     dataCountPerPage: props.dataCountPerPage,
     totalCountOfData: props.reliefListsTotalCount,
     paginate: props.paginate,
     nextPage: props.nextPage,
     prevPage: props.prevPage,
     currentPage: props.currentPage
-  }));
+  }) : '');
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.memo(AdminReliefAsstLists));
@@ -77850,6 +78191,118 @@ var Pagination = function Pagination(_ref) {
 
 /***/ }),
 
+/***/ "./resources/js/relief-goods/components/Tables/ReliefReceivedLists.jsx":
+/*!*****************************************************************************!*\
+  !*** ./resources/js/relief-goods/components/Tables/ReliefReceivedLists.jsx ***!
+  \*****************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _Buttons_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Buttons/Button */ "./resources/js/relief-goods/components/Buttons/Button.jsx");
+/* harmony import */ var _Buttons_ModalButton__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Buttons/ModalButton */ "./resources/js/relief-goods/components/Buttons/ModalButton.jsx");
+/* harmony import */ var _Pagination__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Pagination */ "./resources/js/relief-goods/components/Tables/Pagination.jsx");
+
+
+
+
+
+var ReliefReceivedLists = function ReliefReceivedLists(props) {
+  console.log('Render Relief Sent List');
+  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal fade",
+    id: "showReliefGoodsInfo",
+    "data-backdrop": "static",
+    "data-keyboard": "false",
+    tabIndex: "-1",
+    "aria-labelledby": "showReliefGoodsLabel",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-dialog"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-content"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-header"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
+    className: "modal-title",
+    id: "showReliefGoodsLabel"
+  }, "Modal title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    className: "btn btn-default btn-close",
+    "data-dismiss": "modal",
+    "aria-label": "Close"
+  }, "X")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-body"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Relief Good Info"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "row"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col col-xl-12 row"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col col-xl-4"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Product Name: "), props.reliefAsstInfo.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col col-xl-4"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("label", null, "Qty: "), props.reliefAsstInfo.quantity)))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "modal-footer"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    className: "btn btn-secondary",
+    "data-dismiss": "modal"
+  }, "Close"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    type: "button",
+    className: "btn btn-primary"
+  }, "Understood"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "row d-flex justify-content-center"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col col-xl-10"
+  }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col col-xl-2"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_Button__WEBPACK_IMPORTED_MODULE_1__["default"], {
+    className: 'btn btn-outline-danger',
+    icon: true,
+    defaultIcon: 'far fa-trash-alt'
+  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
+    className: "table table-hover"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "#"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Sponsor"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Prepared at"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Scheduled at"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, props.isLoading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
+    colSpan: "6"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+    src: "../../../../../storage/ssr/loading.gif",
+    className: "img w-100",
+    alt: ""
+  }))) : props.receivedReliefAsst.map(function (reliefList, index) {
+    var _reliefList$pivot, _reliefList$pivot$sen;
+
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
+      key: reliefList.id
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, index + 1), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, Array.isArray(reliefList.users) ? reliefList.users.map(function (user) {
+      return user.name;
+    }) : [reliefList.users].map(function (user) {
+      return user.name;
+    })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.created_at.slice(0, 10)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, (_reliefList$pivot$sen = (_reliefList$pivot = reliefList.pivot).sent_at) !== null && _reliefList$pivot$sen !== void 0 ? _reliefList$pivot$sen : _reliefList$pivot.sent_at = 'Soon'), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_ModalButton__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      className: 'btn btn-info',
+      icon: true,
+      defaultIcon: 'far fa-eye',
+      target: '#showReliefGoodsInfo',
+      onClick: function onClick() {
+        return props.onClickShowReliefAsstInfo(reliefList.id);
+      }
+    })));
+  }))), !props.isLoading && props.totalCountOfData ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pagination__WEBPACK_IMPORTED_MODULE_3__["default"], {
+    dataCountPerPage: props.dataCountPerPage,
+    totalCountOfData: props.totalCountOfData,
+    paginate: props.paginate,
+    nextPage: props.nextPage,
+    prevPage: props.prevPage,
+    currentPage: props.currentPage
+  }) : '');
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.memo(ReliefReceivedLists));
+
+/***/ }),
+
 /***/ "./resources/js/relief-goods/components/Tables/ReliefSentList.jsx":
 /*!************************************************************************!*\
   !*** ./resources/js/relief-goods/components/Tables/ReliefSentList.jsx ***!
@@ -77886,29 +78339,29 @@ var ReliefSentList = function ReliefSentList(props) {
   }), " ")) : props.reliefLists.map(function (reliefList) {
     return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
       key: reliefList.id
-    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.category), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.quantity), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.to), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_ModalButton__WEBPACK_IMPORTED_MODULE_3__["default"], {
-      className: "btn-warning",
+    }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.id), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.category), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.quantity), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefList.to), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
+      className: 'btn-warning',
       onClick: function onClick() {
         return props.handleOnEdit(reliefList.id);
       },
-      action: "edit",
-      target: "exampleModal"
+      icon: true,
+      defaultIcon: 'far fa-edit'
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_Button__WEBPACK_IMPORTED_MODULE_2__["default"], {
-      className: "btn-danger",
+      className: 'btn-danger',
       onClick: function onClick() {
         return props.handleOnDelete(reliefList.id);
       },
       icon: true,
-      defaultIcon: "far fa-trash-alt"
+      defaultIcon: 'far fa-trash-alt'
     })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null));
-  }))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pagination__WEBPACK_IMPORTED_MODULE_4__["default"], {
+  }))), !props.loading && props.totalCountOfData ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pagination__WEBPACK_IMPORTED_MODULE_4__["default"], {
     dataCountPerPage: props.dataCountPerPage,
     totalCountOfData: props.totalCountOfData,
     paginate: props.paginate,
     nextPage: props.nextPage,
     prevPage: props.prevPage,
     currentPage: props.currentPage
-  }));
+  }) : '');
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.memo(ReliefSentList));
@@ -77945,9 +78398,9 @@ __webpack_require__.r(__webpack_exports__);
     className: 'form-control'
   }, {
     name: 'to',
-    type: 'text',
+    type: 'select',
     label: 'To',
-    placeholder: 'To...',
+    optionDefault: 'Donate to...',
     className: 'form-control'
   }]
 });
@@ -78171,16 +78624,100 @@ var processUserReliefAssitance = function processUserReliefAssitance() {
 
 /***/ }),
 
+/***/ "./resources/js/relief-goods/services/Users/Constituent.js":
+/*!*****************************************************************!*\
+  !*** ./resources/js/relief-goods/services/Users/Constituent.js ***!
+  \*****************************************************************/
+/*! exports provided: fetchAuthenticatedUser, fetchUserReceivedReliefAsstLists */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchAuthenticatedUser", function() { return fetchAuthenticatedUser; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUserReceivedReliefAsstLists", function() { return fetchUserReceivedReliefAsstLists; });
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Helpers/FormData.js */ "./resources/js/relief-goods/components/Helpers/FormData.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+/* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(axios__WEBPACK_IMPORTED_MODULE_2__);
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
+
+
+var fetchAuthenticatedUser = /*#__PURE__*/function () {
+  var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+      while (1) {
+        switch (_context.prev = _context.next) {
+          case 0:
+            _context.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get('/auth-user').then(function (res) {
+              return res.data;
+            })["catch"](function (err) {
+              return err.response.data;
+            });
+
+          case 2:
+            return _context.abrupt("return", _context.sent);
+
+          case 3:
+          case "end":
+            return _context.stop();
+        }
+      }
+    }, _callee);
+  }));
+
+  return function fetchAuthenticatedUser() {
+    return _ref.apply(this, arguments);
+  };
+}();
+var fetchUserReceivedReliefAsstLists = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_1__["route"])('/cons.relief-asst.receive')).then(function (res) {
+              return res.data;
+            })["catch"](function (err) {
+              return err.response.data;
+            });
+
+          case 2:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 3:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function fetchUserReceivedReliefAsstLists() {
+    return _ref2.apply(this, arguments);
+  };
+}();
+
+/***/ }),
+
 /***/ "./resources/js/relief-goods/services/Users/Volunteer.js":
 /*!***************************************************************!*\
   !*** ./resources/js/relief-goods/services/Users/Volunteer.js ***!
   \***************************************************************/
-/*! exports provided: index, store, update, destroy */
+/*! exports provided: index, getConstituents, store, update, destroy */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "index", function() { return index; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConstituents", function() { return getConstituents; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "store", function() { return store; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "destroy", function() { return destroy; });
@@ -78199,6 +78736,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
+
+/**
+ * ! GET METHODS
+ */
 
 /**
  * Fetch a lists
@@ -78232,19 +78773,51 @@ var index = /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }();
+var getConstituents = /*#__PURE__*/function () {
+  var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+      while (1) {
+        switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["route"])('/vol.relief-assistance.constituents-lists')).then(function (res) {
+              return res.data;
+            })["catch"](function (err) {
+              return err.response.data;
+            });
+
+          case 2:
+            return _context2.abrupt("return", _context2.sent);
+
+          case 3:
+          case "end":
+            return _context2.stop();
+        }
+      }
+    }, _callee2);
+  }));
+
+  return function getConstituents() {
+    return _ref2.apply(this, arguments);
+  };
+}();
+/**
+ * ! POST METHODS
+ */
+
 /**
  * Store
  * @param {*} payload
  */
 
 var store = /*#__PURE__*/function () {
-  var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(payload) {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(payload) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
       while (1) {
-        switch (_context2.prev = _context2.next) {
+        switch (_context3.prev = _context3.next) {
           case 0:
             console.log(payload);
-            _context2.next = 3;
+            _context3.next = 3;
             return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["route"])('/vol.relief-assistance.donate'), Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["toFormData"])(payload)).then(function (res) {
               return true;
             })["catch"](function (err) {
@@ -78262,42 +78835,9 @@ var store = /*#__PURE__*/function () {
             });
 
           case 3:
-            return _context2.abrupt("return", _context2.sent);
-
-          case 4:
-          case "end":
-            return _context2.stop();
-        }
-      }
-    }, _callee2);
-  }));
-
-  return function store(_x) {
-    return _ref2.apply(this, arguments);
-  };
-}();
-/**
- * Update
- * @param {*} payload
- */
-
-var update = /*#__PURE__*/function () {
-  var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(payload) {
-    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
-      while (1) {
-        switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.next = 2;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/vol.relief-assistance?id=".concat(payload.id), Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["toFormData"])(payload, 'PUT')).then(function (res) {
-              return console.log(res);
-            })["catch"](function (err) {
-              return console.error(err.response.data);
-            });
-
-          case 2:
             return _context3.abrupt("return", _context3.sent);
 
-          case 3:
+          case 4:
           case "end":
             return _context3.stop();
         }
@@ -78305,26 +78845,30 @@ var update = /*#__PURE__*/function () {
     }, _callee3);
   }));
 
-  return function update(_x2) {
+  return function store(_x) {
     return _ref3.apply(this, arguments);
   };
 }();
 /**
- * Delete
- * @param {*} id
+ * ! PUT/PATCH METHODS
  */
 
-var destroy = /*#__PURE__*/function () {
-  var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(id) {
+/**
+ * Update
+ * @param {*} payload
+ */
+
+var update = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(payload) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
       while (1) {
         switch (_context4.prev = _context4.next) {
           case 0:
             _context4.next = 2;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]("/vol.relief-assistance?id=".concat(id)).then(function (res) {
-              return true;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post("/vol.relief-assistance?id=".concat(payload.id), Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["toFormData"])(payload, 'PUT')).then(function (res) {
+              return console.log(res);
             })["catch"](function (err) {
-              return err.response.data;
+              return console.error(err.response.data);
             });
 
           case 2:
@@ -78338,8 +78882,45 @@ var destroy = /*#__PURE__*/function () {
     }, _callee4);
   }));
 
-  return function destroy(_x3) {
+  return function update(_x2) {
     return _ref4.apply(this, arguments);
+  };
+}();
+/**
+ * ! DELETE METHODS
+ */
+
+/**
+ * Delete
+ * @param {*} id
+ */
+
+var destroy = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(id) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+      while (1) {
+        switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]("/vol.relief-assistance?id=".concat(id)).then(function (res) {
+              return true;
+            })["catch"](function (err) {
+              return err.response.data;
+            });
+
+          case 2:
+            return _context5.abrupt("return", _context5.sent);
+
+          case 3:
+          case "end":
+            return _context5.stop();
+        }
+      }
+    }, _callee5);
+  }));
+
+  return function destroy(_x3) {
+    return _ref5.apply(this, arguments);
   };
 }();
 

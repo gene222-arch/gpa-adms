@@ -33,13 +33,8 @@ class ReceivedReliefAsstEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        // return new PrivateChannel('geneTVChannel');
-        return ['geneTVChannel'];
+        return new Channel('geneTVChannel');
     }
 
-    public function broadcastAs()
-    {
-        return 'event-pusher';
-    }
 
 }

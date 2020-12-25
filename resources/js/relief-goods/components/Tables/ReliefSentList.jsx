@@ -41,19 +41,19 @@ const ReliefSentList = (props) =>
                                 <td>{ reliefList.quantity }</td>
                                 <td>{ reliefList.to }</td>
                                 <td>
-                                    <ModalButton
-                                            className='btn-warning'
-                                            onClick={ () => props.handleOnEdit(reliefList.id) }
-                                            action='edit'
-                                            target='exampleModal'
-                                        />
+                                    <Button
+                                        className={ 'btn-warning' }
+                                        onClick={ () => props.handleOnEdit(reliefList.id) }
+                                        icon={ true }
+                                        defaultIcon={ 'far fa-edit' }
+                                    />
                                 </td>
                                 <td>
                                     <Button
-                                        className='btn-danger'
+                                        className={ 'btn-danger' }
                                         onClick={ () => props.handleOnDelete(reliefList.id) }
                                         icon={ true }
-                                        defaultIcon='far fa-trash-alt'
+                                        defaultIcon={ 'far fa-trash-alt' }
                                     />
                                 </td>
                                 <td></td>
@@ -62,14 +62,18 @@ const ReliefSentList = (props) =>
                     }
                 </tbody>
             </table>
-            <Pagination
-                dataCountPerPage={ props.dataCountPerPage }
-                totalCountOfData={ props.totalCountOfData }
-                paginate={ props.paginate }
-                nextPage={ props.nextPage }
-                prevPage={ props.prevPage }
-                currentPage={ props.currentPage }
-            />
+            {
+                !props.loading && props.totalCountOfData
+                    ? <Pagination
+                        dataCountPerPage={ props.dataCountPerPage }
+                        totalCountOfData={ props.totalCountOfData }
+                        paginate={ props.paginate }
+                        nextPage={ props.nextPage }
+                        prevPage={ props.prevPage }
+                        currentPage={ props.currentPage }
+                    />
+                    : ''
+            }
         </div>
     )
 }

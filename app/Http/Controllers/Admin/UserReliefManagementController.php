@@ -11,27 +11,17 @@ class UserReliefManagementController extends Controller
 {
 
     private $admin;
-    private $superAdmin;
-    private $user;
+
 
     /**
      * The Constructor instance will prevent non super-admin users to access this functionality
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Admin $admin)
     {
-        /**
-         * ! Admin
-         */
         $this->middleware(['role:super_admin', 'auth:admin']);
-        $this->admin = new Admin;
-        $this->superAdmin = $this->admin
-            ->whereHas('roles', fn($q) => $q->where('name', 'super_admin'))->first();
-        /**
-         * ! User
-         */
-        $this->user = new User;
+        $this->admin = $admin;
     }
 
     /**
@@ -44,8 +34,9 @@ class UserReliefManagementController extends Controller
     {
         if ($request->wantsJson())
         {
-            return response()->json($this->superAdmin->getUserWithReliefAssistance());
+            return response()->json($this->admin->superAdmin()->getUserWithReliefAssistance());
         }
+
         return view('admins.user-relief-assistance-mngmt.volunteer');
     }
 
@@ -63,7 +54,7 @@ class UserReliefManagementController extends Controller
              * Todo
              * Notify the user that the relief goods that he/she created/sent was approve
              */
-            $isApproved = $this->superAdmin->approveReliefAssistance($request->user_id, $request->relief_good_id);
+            $isApproved = $this->admin->superAdmin()->approveReliefAssistance($request->user_id, $request->relief_good_id);
             return response()->json(
             [
                 'from' => 'Approve Relief Assistance Controller',
@@ -83,7 +74,7 @@ class UserReliefManagementController extends Controller
     {
         if ($request->wantsJson())
         {
-            $isDisapproved = $this->superAdmin->disapproveReliefAssistance($request->user_id, $request->relief_good_id);
+            $isDisapproved = $this->admin->superAdmin()->disapproveReliefAssistance($request->user_id, $request->relief_good_id);
             return response()->json(
             [
                 'from' => 'Disapprove Relief Assistance Controller',
@@ -98,7 +89,7 @@ class UserReliefManagementController extends Controller
     {
         if ($request->wantsJson())
         {
-            $isReceived = $this->superAdmin->reliefAsstHasReceived($request->user_id, $request->relief_good_id);
+            $isReceived = $this->admin->superAdmin()->reliefAsstHasReceived($request->user_id, $request->relief_good_id);
             $message = $isReceived ? 'The relief assistance has been received' : 'Approval is needed before collecting';
             $code = $isReceived ? 200 : 406;
             return response()->json(
@@ -115,7 +106,7 @@ class UserReliefManagementController extends Controller
     {
         if ($request->wantsJson())
         {
-            $isRelieved = $this->superAdmin->relieveReceivedReliefAsst($request->user_id, $request->relief_good_id);
+            $isRelieved = $this->admin->superAdmin()->relieveReceivedReliefAsst($request->user_id, $request->relief_good_id);
             $message = $isRelieved ? 'Success' : 'Approval is needed before collecting';
             $code = $isRelieved ? 200 : 406;
             return response()->json([
@@ -138,7 +129,7 @@ class UserReliefManagementController extends Controller
     {
         if ($request->wantsJson())
         {
-            $isRemoved = $this->superAdmin->removeReliefAssistanceOf($request->user_id, $request->relief_good_id);
+            $isRemoved = $this->admin->superAdmin()->removeReliefAssistanceOf($request->user_id, $request->relief_good_id);
             return response()->json([
                 'from' => 'Remove Relief Assistance Controller',
                 'user_id' => $request->user_id,

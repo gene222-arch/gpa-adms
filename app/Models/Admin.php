@@ -64,6 +64,14 @@ class Admin extends Authenticatable
     }
 
     /**
+     * * Super Admin
+     */
+    public function superAdmin()
+    {
+        return $this->whereHas('roles', fn($q) => $q->where('name', 'super_admin'))->first();
+    }
+
+    /**
      * * Fetching all users with relief assistance
      */
     public function getUserWithReliefAssistance()
@@ -105,7 +113,6 @@ class Admin extends Authenticatable
                         'approved_at' => null
                     ]);
     }
-
 
     public function reliefAsstHasReceived($userId, $reliefGoodId)
     {

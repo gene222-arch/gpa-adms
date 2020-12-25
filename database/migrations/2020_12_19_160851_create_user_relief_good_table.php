@@ -17,6 +17,7 @@ class CreateUserReliefGoodTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('relief_good_id');
+            $table->foreignId('constituent_id');
             $table->boolean('is_approved')->default(false);
             $table->boolean('is_received')->default(false);
             $table->boolean('is_sent')->default(false);
@@ -27,15 +28,17 @@ class CreateUserReliefGoodTable extends Migration
 
             // unique id's
             $table->unique(['user_id', 'relief_good_id']);
+
             // constraints
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
-                ->cascadeOnDelete();
+                ->onDelete('cascade');
+
             $table->foreign('relief_good_id')
                 ->references('id')
                 ->on('relief_goods')
-                ->cascadeOnDelete();
+                ->onDelete('cascade');
         });
     }
 

@@ -29,8 +29,16 @@
     {{-- Sidebar --}}
         <aside>
             @if (Auth::guard('web')->check())
-                @component('layouts.components.UserSidebar')
-                @endcomponent
+
+                @role('volunteer')
+                    @component('layouts.components.UserSidebar')
+                    @endcomponent
+                @endrole
+
+                @role('constituent')
+                    @component('layouts.components.ConstituentSidebar')
+                    @endcomponent
+                @endrole
             @endif
         </aside>
     {{-- Sidebar --}}
@@ -40,8 +48,18 @@
 
         {{-- Navbar --}}
             <header>
-                @component('layouts.components.UserNavbar')
-                @endcomponent
+                @if (Auth::guard('web')->check())
+
+                    @role('volunteer')
+                        @component('layouts.components.UserNavbar')
+                        @endcomponent
+                    @endrole
+
+                    @role('constituent')
+                        @component('layouts.components.ConstituentNavbar')
+                        @endcomponent
+                    @endrole
+                @endif
             </header>
         {{-- Navbar --}}
 

@@ -1,15 +1,36 @@
 import React from 'react'
 
+/**
+ * @function Button
+ */
 const ModalButton = React.forwardRef(( props, ref ) =>
-    (
+{
+    const icon = () =>
+    {
+        if (props.defaultIcon)
+        {
+            return props.defaultIcon;
+        }
+
+        return props.status
+            ? `${ props.successIcon } text-success `
+            : props.failIcon;
+    };
+
+    return  (
         <button
             ref={ ref }
             className={ `btn ${ props.className }` }
-            onClick={ props.onClick }
             data-toggle='modal'
-            data-target={ `#${ props.target }` }
+            data-target={ props.target }
+            onClick={ props.onClick }
             >
-            <i className={ `far fa-${ props.action }` }></i> </button>
-    ));
+                { props.icon
+                    ? <i className={ icon() }></i>
+                    : props.btnName
+                     }
+            </button>
+    );
+})
 
 export default React.memo(ModalButton);

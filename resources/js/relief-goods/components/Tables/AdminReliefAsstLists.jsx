@@ -114,14 +114,19 @@ const AdminReliefAsstLists = (props) =>
                     }
                 </tbody>
             </table>
-            <Pagination
-                    dataCountPerPage={ props.dataCountPerPage }
-                    totalCountOfData={ props.reliefListsTotalCount }
-                    paginate = { props.paginate }
-                    nextPage = { props.nextPage }
-                    prevPage = { props.prevPage }
-                    currentPage = { props.currentPage }
-                />
+
+            {
+                !loading && props.reliefListsTotalCount
+                    ? <Pagination
+                        dataCountPerPage={ props.dataCountPerPage }
+                        totalCountOfData={ props.reliefListsTotalCount }
+                        paginate = { props.paginate }
+                        nextPage = { props.nextPage }
+                        prevPage = { props.prevPage }
+                        currentPage = { props.currentPage }
+                    />
+                    : ''
+            }
         </div>
     )
 }
