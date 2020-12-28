@@ -11,7 +11,7 @@ const Field = ({field, onChange, errorMessages = {}, options}) =>
 {
     console.log('Render Field');
 
-    const { label, ...attributes } = field;
+    const { label, optionDefaultValue, ...attributes } = field;
     const errorMessagesKeys = Object.keys(errorMessages);
 
     /**
@@ -61,7 +61,7 @@ const Field = ({field, onChange, errorMessages = {}, options}) =>
                                 <select { ...attributes }
                                     className={ setIsInvalid(attributes.name) }
                                     onChange={ onChange }>
-                                    <option key={'uniqueKey'} value="">{ attributes.optionDefault }</option>
+                                    <option key={'uniqueKey'} value="">{ optionDefaultValue }</option>
                                     {
                                         options.map(option => (
                                             <option key={option.id} value={ option.id }> { option.name } </option>

@@ -17,6 +17,11 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-Broadcast::channel('cons.relief-asst.receive.{id}', function ($user, $id) {
+Broadcast::channel('rcpt.relief-asst.receive.{id}', function ($user, $id) {
     return true;
-});
+}, []);
+
+Broadcast::channel('admin.dashboard.relief-assistance-mngmt.volunteers.{superAdminId}', function ($user, $id) {
+    return true;
+}, ['guards' => 'admin']);
+

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import {
-    getUserWithReliefAssistance,
+    fetchUserWithReliefAssistance,
     approveUserReliefAssistance,
     disApproveUserReliefAssistance,
     reliefAsstHasReceived,
+    relieveReceivedReliefAsst,
+    dispatchReliefAsst,
     removeReliefAssistance,
-    relieveReceivedReliefAsst
 } from './services/Admin'
 import AdminReliefAsstLists from './components/Tables/AdminReliefAsstLists'
 import * as Alert from '../relief-goods/components/Helpers/Alert.js'
@@ -17,6 +18,7 @@ import * as Alert from '../relief-goods/components/Helpers/Alert.js'
 const AdminApp = () =>
 {
     const [ usersReliefLists, setUsersReliefLists ] = useState([]);
+    const [ recipientId, setRecipientId ] = useState(null);
     const [ loading, setLoading ] = useState(false);
 
     const [ currentPage, setCurrentPage ] = useState(1);
@@ -31,14 +33,14 @@ const AdminApp = () =>
     */
 
     /**
-     * * Fetching users with relief assistance
+     * * Gettings users with relief assistance
      *
      * @returns @void
      */
-    const loadUsersWithReliefAsst = async () =>
+    const getUsersWithReliefAsst = async () =>
     {
         setLoading(true);
-        const result = await getUserWithReliefAssistance();
+        const result = await fetchUserWithReliefAssistance();
 
         if (result.length)
         {
@@ -54,8 +56,6 @@ const AdminApp = () =>
         {
             setUsersReliefLists([]);
         }
-
-        console.log(result);
         setLoading(false);
     };
 
@@ -65,11 +65,12 @@ const AdminApp = () =>
      * @param {*} payload
      * @returns @void
      */
-    const approveUser = async (payload) =>
+    const onClickApproveReliefAsst = async (payload) =>
     {
         const result = await approveUserReliefAssistance(payload);
+
         result
-            ? loadUsersWithReliefAsst()
+            ? getUsersWithReliefAsst()
             : Alert.onError();
     }
 
@@ -79,29 +80,55 @@ const AdminApp = () =>
      * @param {*} payload
      * @returns @void
      */
-    const disApproveUser = async (payload) =>
+    const onClickDisapproveReliefAsst = async (payload) =>
     {
         const result = await disApproveUserReliefAssistance(payload);
+
         result
-            ? loadUsersWithReliefAsst()
+            ? getUsersWithReliefAsst()
             : Alert.onError();
     }
 
-    const handleReliefAsstHasReceived = async (payload) =>
+    /**
+     * On click Relief Asst is received
+     *
+     * @param {*} payload
+     */
+    const onClickReliefAsstHasReceived = async (payload) =>
     {
         const result = await reliefAsstHasReceived(payload);
+
         result === true
-            ? loadUsersWithReliefAsst()
+            ? getUsersWithReliefAsst()
             : Alert.onInfo(result);
     };
 
-    const handleRelieveReceivedReliefAsst = async (payload) =>
+    /**
+     * On click remove a user relief asst
+     *
+     * @param {*} payload
+     */
+    const onClickRelieveReceivedReliefAsst = async (payload) =>
     {
         const result = await relieveReceivedReliefAsst(payload);
+
         result === true
-            ? loadUsersWithReliefAsst()
+            ? getUsersWithReliefAsst()
             : Alert.onInfo(result);
     }
+
+    /**
+     *
+     * @param {*} payload
+     */
+    const onClickDispatchReliefAsst = async (payload) =>
+    {
+        const result = await dispatchReliefAsst(payload);
+        result === true
+            ? getUsersWithReliefAsst()
+            : Alert.onInfo(result);
+    }
+
 
     /**
      * Removing a user's relief assistance
@@ -109,12 +136,11 @@ const AdminApp = () =>
      * @param {*} payload
      * @returns @void
      */
-
-    const handleRemoveReliefAsst = async (payload) =>
+    const onClickRemoveReliefAsst = async (payload) =>
     {
         const result = await removeReliefAssistance(payload);
         result
-            ? loadUsersWithReliefAsst()
+            ? getUsersWithReliefAsst()
             : Alert.onError();
     };
 
@@ -134,28 +160,44 @@ const AdminApp = () =>
 
 
     /**
+     * Events
+     */
+
+    const listenToNewReliefAsstEvent = () =>
+    {
+        Echo.private('admin.dashboard.relief-assistance-mngmt.volunteers.1')
+            .listen('NewReliefAssistanceEvent', (response) =>
+            {
+                const fetch = async () =>
+                {
+                    const result = await fetchUserWithReliefAssistance();
+                    setUsersReliefLists(result);
+                };
+                fetch();
+            });
+    };
+
+    /**
      * ? Side Effects
      */
 
     useEffect(() =>
     {
-        loadUsersWithReliefAsst();
+        getUsersWithReliefAsst();
+        listenToNewReliefAsstEvent();
     }, []);
 
-
-    /**
-     * ! Return Statement
-     */
 
     return (
         <div>
             <AdminReliefAsstLists
                 usersReliefLists={ currentPageList }
-                approveUser={ approveUser }
-                disApproveUser={ disApproveUser }
-                handleReliefAsstHasReceived={ handleReliefAsstHasReceived }
-                handleRelieveReceivedReliefAsst={ handleRelieveReceivedReliefAsst }
-                handleRemoveReliefAsst={ handleRemoveReliefAsst }
+                onClickApproveReliefAsst={ onClickApproveReliefAsst }
+                onClickDisapproveReliefAsst={ onClickDisapproveReliefAsst }
+                onClickReliefAsstHasReceived={ onClickReliefAsstHasReceived }
+                onClickRelieveReceivedReliefAsst={ onClickRelieveReceivedReliefAsst }
+                onClickDispatchReliefAsst= { onClickDispatchReliefAsst }
+                onClickRemoveReliefAsst={ onClickRemoveReliefAsst }
                 dataCountPerPage={ dataCountPerPage }
                 totalCountOfData={ reliefListsTotalCount }
                 paginate = { paginate }
@@ -163,10 +205,9 @@ const AdminApp = () =>
                 prevPage = { prevPage }
                 currentPage = { currentPage }
                 loading={ loading }
-
                 />
         </div>
     )
 }
 
-export default AdminApp;
+export default React.memo(AdminApp);

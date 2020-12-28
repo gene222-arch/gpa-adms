@@ -15,14 +15,16 @@ const ReliefReceivedLists = (props) =>
                 <div className="modal-dialog">
                     <div className="modal-content">
                         <div className="modal-header">
-                            <h5 className="modal-title" id="showReliefGoodsLabel">Modal title</h5>
+                            <h3 className="modal-title" id="showReliefGoodsLabel">Relief Assistance Info.</h3>
                             <button type="button" className="btn btn-default btn-close" data-dismiss="modal" aria-label="Close">
                                 X
                             </button>
                         </div>
                         <div className="modal-body">
-                            <h1>Relief Good Info</h1>
                             <div className="row">
+                                <div className="col col-xl-12">
+                                    <img src="../../../../../storage/ssr/loading.gif" className='img w-100' alt=""/>
+                                </div>
                                 <div className="col col-xl-12 row">
                                     <div className="col col-xl-4">
                                         <label>Product Name: </label>
@@ -42,7 +44,8 @@ const ReliefReceivedLists = (props) =>
                     </div>
                 </div>
             </div>
-            <div className="row d-flex justify-content-center">
+
+            <div className="row d-flex float-right">
                 <div className="col col-xl-10"></div>
                 <div className="col col-xl-2">
                     <Button

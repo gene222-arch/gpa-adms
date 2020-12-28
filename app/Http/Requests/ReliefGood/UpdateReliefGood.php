@@ -28,7 +28,14 @@ class UpdateReliefGood extends BaseRequest
             'category' => ['required'],
             'name' => ['required', 'string'],
             'quantity' => ['required', 'integer', 'min:1'],
-            'to' => ['required', 'string']
+            'to' => ['required', 'string', 'exists:users,id']
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'to.exists' => 'This recipient does not exists',
         ];
     }
 

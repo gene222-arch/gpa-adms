@@ -76320,24 +76320,35 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _relief_goods_VolunteerApp__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./relief-goods/VolunteerApp */ "./resources/js/relief-goods/VolunteerApp.jsx");
-/* harmony import */ var _relief_goods_ConstituentApp__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./relief-goods/ConstituentApp */ "./resources/js/relief-goods/ConstituentApp.jsx");
+/* harmony import */ var _relief_goods_RecipientApp__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./relief-goods/RecipientApp */ "./resources/js/relief-goods/RecipientApp.jsx");
 /* harmony import */ var _relief_goods_AdminApp__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./relief-goods/AdminApp */ "./resources/js/relief-goods/AdminApp.jsx");
 
 
 
 
 
-
-if (document.getElementById('relief')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_VolunteerApp__WEBPACK_IMPORTED_MODULE_2__["default"], null), document.getElementById('relief'));
-}
-
-if (document.getElementById('my-received-relief-asst-lists')) {
-  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_ConstituentApp__WEBPACK_IMPORTED_MODULE_3__["default"], null), document.getElementById('my-received-relief-asst-lists'));
-}
+/**
+ * Admin Components
+ */
 
 if (document.getElementById('volunteer-relief-assistance-mngmt')) {
   react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_AdminApp__WEBPACK_IMPORTED_MODULE_4__["default"], null), document.getElementById('volunteer-relief-assistance-mngmt'));
+}
+/**
+ * Volunteer Components
+ */
+
+
+if (document.getElementById('on-process-and-create-relief-asst')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_VolunteerApp__WEBPACK_IMPORTED_MODULE_2__["default"], null), document.getElementById('on-process-and-create-relief-asst'));
+}
+/**
+ * Recipient Components
+ */
+
+
+if (document.getElementById('my-received-relief-asst-lists')) {
+  react_dom__WEBPACK_IMPORTED_MODULE_1___default.a.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_relief_goods_RecipientApp__WEBPACK_IMPORTED_MODULE_3__["default"], null), document.getElementById('my-received-relief-asst-lists'));
 }
 
 /***/ }),
@@ -76479,24 +76490,29 @@ var AdminApp = function AdminApp() {
       usersReliefLists = _useState2[0],
       setUsersReliefLists = _useState2[1];
 
-  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
+  var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(null),
       _useState4 = _slicedToArray(_useState3, 2),
-      loading = _useState4[0],
-      setLoading = _useState4[1];
+      recipientId = _useState4[0],
+      setRecipientId = _useState4[1];
 
-  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(1),
+  var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(false),
       _useState6 = _slicedToArray(_useState5, 2),
-      currentPage = _useState6[0],
-      setCurrentPage = _useState6[1];
+      loading = _useState6[0],
+      setLoading = _useState6[1];
 
-  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(2),
-      _useState8 = _slicedToArray(_useState7, 1),
-      dataCountPerPage = _useState8[0];
+  var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(1),
+      _useState8 = _slicedToArray(_useState7, 2),
+      currentPage = _useState8[0],
+      setCurrentPage = _useState8[1];
 
-  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
-      _useState10 = _slicedToArray(_useState9, 2),
-      reliefListsTotalCount = _useState10[0],
-      setReliefListsTotalCount = _useState10[1];
+  var _useState9 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(2),
+      _useState10 = _slicedToArray(_useState9, 1),
+      dataCountPerPage = _useState10[0];
+
+  var _useState11 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])(0),
+      _useState12 = _slicedToArray(_useState11, 2),
+      reliefListsTotalCount = _useState12[0],
+      setReliefListsTotalCount = _useState12[1];
   /*
   |--------------------------------------------------------------------------
   ? Database
@@ -76504,13 +76520,13 @@ var AdminApp = function AdminApp() {
   */
 
   /**
-   * * Fetching users with relief assistance
+   * * Gettings users with relief assistance
    *
    * @returns @void
    */
 
 
-  var loadUsersWithReliefAsst = /*#__PURE__*/function () {
+  var getUsersWithReliefAsst = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
       var result, totalReliefLists;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -76519,7 +76535,7 @@ var AdminApp = function AdminApp() {
             case 0:
               setLoading(true);
               _context.next = 3;
-              return Object(_services_Admin__WEBPACK_IMPORTED_MODULE_2__["getUserWithReliefAssistance"])();
+              return Object(_services_Admin__WEBPACK_IMPORTED_MODULE_2__["fetchUserWithReliefAssistance"])();
 
             case 3:
               result = _context.sent;
@@ -76537,10 +76553,9 @@ var AdminApp = function AdminApp() {
                 setUsersReliefLists([]);
               }
 
-              console.log(result);
               setLoading(false);
 
-            case 7:
+            case 6:
             case "end":
               return _context.stop();
           }
@@ -76548,7 +76563,7 @@ var AdminApp = function AdminApp() {
       }, _callee);
     }));
 
-    return function loadUsersWithReliefAsst() {
+    return function getUsersWithReliefAsst() {
       return _ref.apply(this, arguments);
     };
   }();
@@ -76560,7 +76575,7 @@ var AdminApp = function AdminApp() {
    */
 
 
-  var approveUser = /*#__PURE__*/function () {
+  var onClickApproveReliefAsst = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(payload) {
       var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -76572,7 +76587,7 @@ var AdminApp = function AdminApp() {
 
             case 2:
               result = _context2.sent;
-              result ? loadUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onError"]();
+              result ? getUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onError"]();
 
             case 4:
             case "end":
@@ -76582,7 +76597,7 @@ var AdminApp = function AdminApp() {
       }, _callee2);
     }));
 
-    return function approveUser(_x) {
+    return function onClickApproveReliefAsst(_x) {
       return _ref2.apply(this, arguments);
     };
   }();
@@ -76594,7 +76609,7 @@ var AdminApp = function AdminApp() {
    */
 
 
-  var disApproveUser = /*#__PURE__*/function () {
+  var onClickDisapproveReliefAsst = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(payload) {
       var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
@@ -76606,7 +76621,7 @@ var AdminApp = function AdminApp() {
 
             case 2:
               result = _context3.sent;
-              result ? loadUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onError"]();
+              result ? getUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onError"]();
 
             case 4:
             case "end":
@@ -76616,12 +76631,18 @@ var AdminApp = function AdminApp() {
       }, _callee3);
     }));
 
-    return function disApproveUser(_x2) {
+    return function onClickDisapproveReliefAsst(_x2) {
       return _ref3.apply(this, arguments);
     };
   }();
+  /**
+   * On click Relief Asst is received
+   *
+   * @param {*} payload
+   */
 
-  var handleReliefAsstHasReceived = /*#__PURE__*/function () {
+
+  var onClickReliefAsstHasReceived = /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(payload) {
       var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
@@ -76633,7 +76654,7 @@ var AdminApp = function AdminApp() {
 
             case 2:
               result = _context4.sent;
-              result === true ? loadUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onInfo"](result);
+              result === true ? getUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onInfo"](result);
 
             case 4:
             case "end":
@@ -76643,12 +76664,18 @@ var AdminApp = function AdminApp() {
       }, _callee4);
     }));
 
-    return function handleReliefAsstHasReceived(_x3) {
+    return function onClickReliefAsstHasReceived(_x3) {
       return _ref4.apply(this, arguments);
     };
   }();
+  /**
+   * On click remove a user relief asst
+   *
+   * @param {*} payload
+   */
 
-  var handleRelieveReceivedReliefAsst = /*#__PURE__*/function () {
+
+  var onClickRelieveReceivedReliefAsst = /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(payload) {
       var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
@@ -76660,7 +76687,7 @@ var AdminApp = function AdminApp() {
 
             case 2:
               result = _context5.sent;
-              result === true ? loadUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onInfo"](result);
+              result === true ? getUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onInfo"](result);
 
             case 4:
             case "end":
@@ -76670,8 +76697,40 @@ var AdminApp = function AdminApp() {
       }, _callee5);
     }));
 
-    return function handleRelieveReceivedReliefAsst(_x4) {
+    return function onClickRelieveReceivedReliefAsst(_x4) {
       return _ref5.apply(this, arguments);
+    };
+  }();
+  /**
+   *
+   * @param {*} payload
+   */
+
+
+  var onClickDispatchReliefAsst = /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6(payload) {
+      var result;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+        while (1) {
+          switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.next = 2;
+              return Object(_services_Admin__WEBPACK_IMPORTED_MODULE_2__["dispatchReliefAsst"])(payload);
+
+            case 2:
+              result = _context6.sent;
+              result === true ? getUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onInfo"](result);
+
+            case 4:
+            case "end":
+              return _context6.stop();
+          }
+        }
+      }, _callee6);
+    }));
+
+    return function onClickDispatchReliefAsst(_x5) {
+      return _ref6.apply(this, arguments);
     };
   }();
   /**
@@ -76682,30 +76741,30 @@ var AdminApp = function AdminApp() {
    */
 
 
-  var handleRemoveReliefAsst = /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6(payload) {
+  var onClickRemoveReliefAsst = /*#__PURE__*/function () {
+    var _ref7 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7(payload) {
       var result;
-      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
         while (1) {
-          switch (_context6.prev = _context6.next) {
+          switch (_context7.prev = _context7.next) {
             case 0:
-              _context6.next = 2;
+              _context7.next = 2;
               return Object(_services_Admin__WEBPACK_IMPORTED_MODULE_2__["removeReliefAssistance"])(payload);
 
             case 2:
-              result = _context6.sent;
-              result ? loadUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onError"]();
+              result = _context7.sent;
+              result ? getUsersWithReliefAsst() : _relief_goods_components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_4__["onError"]();
 
             case 4:
             case "end":
-              return _context6.stop();
+              return _context7.stop();
           }
         }
-      }, _callee6);
+      }, _callee7);
     }));
 
-    return function handleRemoveReliefAsst(_x5) {
-      return _ref6.apply(this, arguments);
+    return function onClickRemoveReliefAsst(_x6) {
+      return _ref7.apply(this, arguments);
     };
   }();
   /**
@@ -76736,24 +76795,59 @@ var AdminApp = function AdminApp() {
     });
   };
   /**
+   * Events
+   */
+
+
+  var listenToNewReliefAsstEvent = function listenToNewReliefAsstEvent() {
+    Echo["private"]('admin.dashboard.relief-assistance-mngmt.volunteers.1').listen('NewReliefAssistanceEvent', function (reliefAsst) {
+      var fetch = /*#__PURE__*/function () {
+        var _ref8 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee8() {
+          var result;
+          return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee8$(_context8) {
+            while (1) {
+              switch (_context8.prev = _context8.next) {
+                case 0:
+                  _context8.next = 2;
+                  return Object(_services_Admin__WEBPACK_IMPORTED_MODULE_2__["fetchUserWithReliefAssistance"])();
+
+                case 2:
+                  result = _context8.sent;
+                  setUsersReliefLists(result);
+
+                case 4:
+                case "end":
+                  return _context8.stop();
+              }
+            }
+          }, _callee8);
+        }));
+
+        return function fetch() {
+          return _ref8.apply(this, arguments);
+        };
+      }();
+
+      fetch();
+    });
+  };
+  /**
    * ? Side Effects
    */
 
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
-    loadUsersWithReliefAsst();
+    getUsersWithReliefAsst();
+    listenToNewReliefAsstEvent();
   }, []);
-  /**
-   * ! Return Statement
-   */
-
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Tables_AdminReliefAsstLists__WEBPACK_IMPORTED_MODULE_3__["default"], {
     usersReliefLists: currentPageList,
-    approveUser: approveUser,
-    disApproveUser: disApproveUser,
-    handleReliefAsstHasReceived: handleReliefAsstHasReceived,
-    handleRelieveReceivedReliefAsst: handleRelieveReceivedReliefAsst,
-    handleRemoveReliefAsst: handleRemoveReliefAsst,
+    onClickApproveReliefAsst: onClickApproveReliefAsst,
+    onClickDisapproveReliefAsst: onClickDisapproveReliefAsst,
+    onClickReliefAsstHasReceived: onClickReliefAsstHasReceived,
+    onClickRelieveReceivedReliefAsst: onClickRelieveReceivedReliefAsst,
+    onClickDispatchReliefAsst: onClickDispatchReliefAsst,
+    onClickRemoveReliefAsst: onClickRemoveReliefAsst,
     dataCountPerPage: dataCountPerPage,
     totalCountOfData: reliefListsTotalCount,
     paginate: paginate,
@@ -76768,10 +76862,10 @@ var AdminApp = function AdminApp() {
 
 /***/ }),
 
-/***/ "./resources/js/relief-goods/ConstituentApp.jsx":
-/*!******************************************************!*\
-  !*** ./resources/js/relief-goods/ConstituentApp.jsx ***!
-  \******************************************************/
+/***/ "./resources/js/relief-goods/RecipientApp.jsx":
+/*!****************************************************!*\
+  !*** ./resources/js/relief-goods/RecipientApp.jsx ***!
+  \****************************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -76781,8 +76875,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _services_Users_Constituent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./services/Users/Constituent */ "./resources/js/relief-goods/services/Users/Constituent.js");
-/* harmony import */ var _relief_goods_components_Tables_ReliefReceivedLists__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../relief-goods/components/Tables/ReliefReceivedLists */ "./resources/js/relief-goods/components/Tables/ReliefReceivedLists.jsx");
+/* harmony import */ var _services_Users_Recipient__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./services/Users/Recipient */ "./resources/js/relief-goods/services/Users/Recipient.js");
+/* harmony import */ var _components_Tables_ReliefReceivedLists__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/Tables/ReliefReceivedLists */ "./resources/js/relief-goods/components/Tables/ReliefReceivedLists.jsx");
 
 
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -76813,7 +76907,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var ConstituentApp = function ConstituentApp() {
+var RecipientApp = function RecipientApp() {
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
       _useState2 = _slicedToArray(_useState, 2),
       authenticatedUser = _useState2[0],
@@ -76850,7 +76944,7 @@ var ConstituentApp = function ConstituentApp() {
 
   var indexOfLastPage = currentPage * dataCountPerPage;
   var indexOfFirstPage = indexOfLastPage - dataCountPerPage;
-  var currentPageData = receivedReliefAsst.slice(indexOfFirstPage, indexOfLastPage);
+  var currentPageData = receivedReliefAsst ? receivedReliefAsst.slice(indexOfFirstPage, indexOfLastPage) : [];
 
   var paginate = function paginate(pageNumber) {
     return setCurrentPage(pageNumber);
@@ -76882,7 +76976,7 @@ var ConstituentApp = function ConstituentApp() {
           switch (_context.prev = _context.next) {
             case 0:
               _context.next = 2;
-              return Object(_services_Users_Constituent__WEBPACK_IMPORTED_MODULE_2__["fetchAuthenticatedUser"])();
+              return Object(_services_Users_Recipient__WEBPACK_IMPORTED_MODULE_2__["fetchAuthenticatedUser"])();
 
             case 2:
               result = _context.sent;
@@ -76910,14 +77004,15 @@ var ConstituentApp = function ConstituentApp() {
             case 0:
               setIsLoading(true);
               _context2.next = 3;
-              return Object(_services_Users_Constituent__WEBPACK_IMPORTED_MODULE_2__["fetchUserReceivedReliefAsstLists"])();
+              return Object(_services_Users_Recipient__WEBPACK_IMPORTED_MODULE_2__["fetchReceivedReliefAsstLists"])();
 
             case 3:
               result = _context2.sent;
               result ? setReceivedReliefAsst(result) : setReceivedReliefAsst([]);
+              console.log(result);
               setIsLoading(false);
 
-            case 6:
+            case 7:
             case "end":
               return _context2.stop();
           }
@@ -76950,12 +77045,35 @@ var ConstituentApp = function ConstituentApp() {
 
 
   var listenToNewReliefAsstEvent = function listenToNewReliefAsstEvent() {
-    Echo["private"]('cons.relief-asst.receive.' + authenticatedUser.id).listen('NewReliefAssistance', function (reliefAsst) {
-      console.log(reliefAsst);
+    Echo["private"]("rcpt.relief-asst.receive.".concat(authenticatedUser.id)).listen('NewReliefAssistanceEvent', function (reliefAsst) {
       setReceivedReliefAsst(function (prevVal) {
         return [].concat(_toConsumableArray(prevVal), [reliefAsst]);
       });
-      alert('Successfully inserted');
+    });
+  };
+
+  var listenToRemoveReliefAsstEvent = function listenToRemoveReliefAsstEvent() {
+    Echo["private"]("rcpt.relief-asst.receive.".concat(authenticatedUser.id)).listen('OnRemoveReliefAssistanceEvent', function (result) {
+      setReceivedReliefAsst(function (prevVal) {
+        return prevVal.filter(function (reliefAsst) {
+          return reliefAsst.pivot.relief_good_id != result.relief_good_id;
+        });
+      });
+    });
+  };
+
+  var listenToDispatchReliefAsstEvent = function listenToDispatchReliefAsstEvent() {
+    Echo["private"]("rcpt.relief-asst.receive.".concat(authenticatedUser.id)).listen('OnDispatchReliefAsstEvent', function (result) {
+      console.log(result.sent_at);
+      var newData = receivedReliefAsst.map(function (data) {
+        if (data.id === result.relief_good_id) {
+          data.pivot.sent_at = result.sent_at;
+          console.log(data);
+        }
+
+        return data;
+      });
+      setReceivedReliefAsst(newData);
     });
   };
   /**
@@ -76967,15 +77085,20 @@ var ConstituentApp = function ConstituentApp() {
     getUserReceivedReliefAsst();
     getAuthenticatedUser();
   }, []);
+  /**
+   * * Events
+   */
+
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     listenToNewReliefAsstEvent();
-    console.log(authenticatedUser);
+    listenToRemoveReliefAsstEvent();
+    listenToDispatchReliefAsstEvent();
   }, [authenticatedUser]);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "card"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "card-body"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_relief_goods_components_Tables_ReliefReceivedLists__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Tables_ReliefReceivedLists__WEBPACK_IMPORTED_MODULE_3__["default"], {
     receivedReliefAsst: currentPageData,
     onClickShowReliefAsstInfo: onClickShowReliefAsstInfo,
     reliefAsstInfo: reliefAsstInfo,
@@ -76993,7 +77116,7 @@ var ConstituentApp = function ConstituentApp() {
   })));
 };
 
-/* harmony default export */ __webpack_exports__["default"] = (ConstituentApp);
+/* harmony default export */ __webpack_exports__["default"] = (RecipientApp);
 
 /***/ }),
 
@@ -77043,25 +77166,25 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 var VolunteerApp = function VolunteerApp() {
   console.log('Render VolunteerApp');
   /**
-   * ! States
+   * * States
    */
 
   var _useState = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState2 = _slicedToArray(_useState, 2),
-      reliefLists = _useState2[0],
-      setReliefLists = _useState2[1]; // Display
+      reliefAsstLists = _useState2[0],
+      setReliefAsstLists = _useState2[1]; // Display
 
 
   var _useState3 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
       _useState4 = _slicedToArray(_useState3, 2),
-      reliefList = _useState4[0],
-      setReliefList = _useState4[1]; // Update
+      reliefAsst = _useState4[0],
+      setReliefAsst = _useState4[1]; // Update
 
 
   var _useState5 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])([]),
       _useState6 = _slicedToArray(_useState5, 2),
-      constituents = _useState6[0],
-      setConstituents = _useState6[1]; // Select options
+      recipients = _useState6[0],
+      setRecipients = _useState6[1]; // Select options
 
 
   var _useState7 = Object(react__WEBPACK_IMPORTED_MODULE_1__["useState"])({}),
@@ -77082,7 +77205,7 @@ var VolunteerApp = function VolunteerApp() {
       setLoading = _useState12[1]; // Loading
 
   /**
-   * ! Pagination States
+   * * Pagination States
    */
 
 
@@ -77097,7 +77220,7 @@ var VolunteerApp = function VolunteerApp() {
       dataCountPerPage = _useState16[0]; // Page 1 = No. of Data = 2
 
   /**
-   * ! Refs
+   * * Refs
    */
 
 
@@ -77107,7 +77230,7 @@ var VolunteerApp = function VolunteerApp() {
    * ! Database
    * * * * * * * * * */
 
-  var getReliefLists = /*#__PURE__*/function () {
+  var getReliefAsstLists = /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
       var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -77117,11 +77240,11 @@ var VolunteerApp = function VolunteerApp() {
               setLoading(true); // Loading
 
               _context.next = 3;
-              return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["index"])();
+              return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["fetchReliefAsstLists"])();
 
             case 3:
               result = _context.sent;
-              result ? setReliefLists(result) : setReliefLists([]);
+              result ? setReliefAsstLists(result) : setReliefAsstLists([]);
               setLoading(false); // Loaded
 
             case 6:
@@ -77132,12 +77255,12 @@ var VolunteerApp = function VolunteerApp() {
       }, _callee);
     }));
 
-    return function getReliefLists() {
+    return function getReliefAsstLists() {
       return _ref.apply(this, arguments);
     };
   }();
 
-  var getConstituentsLists = /*#__PURE__*/function () {
+  var getRecipients = /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
       var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
@@ -77145,11 +77268,11 @@ var VolunteerApp = function VolunteerApp() {
           switch (_context2.prev = _context2.next) {
             case 0:
               _context2.next = 2;
-              return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["getConstituents"])();
+              return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["fetchRecipients"])();
 
             case 2:
               result = _context2.sent;
-              result ? setConstituents(result) : setConstituents([]);
+              result ? setRecipients(result) : setRecipients([]);
 
             case 4:
             case "end":
@@ -77159,12 +77282,12 @@ var VolunteerApp = function VolunteerApp() {
       }, _callee2);
     }));
 
-    return function getConstituentsLists() {
+    return function getRecipients() {
       return _ref2.apply(this, arguments);
     };
   }();
 
-  var handleOnStore = /*#__PURE__*/function () {
+  var handleOnStoreReliefAsst = /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(payload) {
       var result;
       return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
@@ -77172,7 +77295,7 @@ var VolunteerApp = function VolunteerApp() {
           switch (_context3.prev = _context3.next) {
             case 0:
               _context3.next = 2;
-              return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["store"])(payload);
+              return Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["saveReliefAsst"])(payload);
 
             case 2:
               result = _context3.sent;
@@ -77180,7 +77303,7 @@ var VolunteerApp = function VolunteerApp() {
               if (result !== true) {
                 setErrorMessages(result);
               } else {
-                getReliefLists();
+                getReliefAsstLists();
                 setErrorMessages({});
                 _components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_6__["onSuccess"]();
               }
@@ -77193,17 +77316,17 @@ var VolunteerApp = function VolunteerApp() {
       }, _callee3);
     }));
 
-    return function handleOnStore(_x) {
+    return function handleOnStoreReliefAsst(_x) {
       return _ref3.apply(this, arguments);
     };
   }();
 
-  var handleOnEdit = function handleOnEdit(id) {
-    var findById = reliefLists.find(function (reliefList) {
+  var handleOnEditReliefAsst = function handleOnEditReliefAsst(id) {
+    var findById = reliefAsstLists.find(function (reliefList) {
       return reliefList.id === id;
     });
     console.log(findById);
-    findById ? setReliefList(findById) : setReliefList({});
+    findById ? setReliefAsst(findById) : setReliefAsst({});
   };
 
   var handleOnUpdate = /*#__PURE__*/function () {
@@ -77243,8 +77366,8 @@ var VolunteerApp = function VolunteerApp() {
                 confirmButtonText: 'Yes, delete it!'
               }).then(function (result) {
                 if (result.isConfirmed) {
-                  if (Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["destroy"])(id)) {
-                    getReliefLists();
+                  if (Object(_services_Users_Volunteer__WEBPACK_IMPORTED_MODULE_2__["removeReliefAsst"])(id)) {
+                    getReliefAsstLists();
                     _components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_6__["onDelete"]();
                   } else {
                     _components_Helpers_Alert_js__WEBPACK_IMPORTED_MODULE_6__["onError"]();
@@ -77270,21 +77393,7 @@ var VolunteerApp = function VolunteerApp() {
 
 
   var receivedReliefAsstEvent = function receivedReliefAsstEvent() {
-    // Route: channel.php -- for BroadCast channel
-    // Echo.join('chat')
-    //     .here((users) =>
-    //     {
-    //         console.log(users);
-    //     })
-    //     .joining((user) =>
-    //     {
-    //         console.log(`${ user.name } has joined`);
-    //     })
-    //     .leaving((user) =>
-    //     {
-    //         console.log(`${ user.name } has leaved`);
-    //     });
-    Echo.channel('geneTVChannel').listen('ReceivedReliefAsstEvent', function (e) {
+    Echo.channel('channelName').listen('OnReceiveReliefAsstEvent', function (e) {
       console.log(e.message);
       alert(e.message);
     });
@@ -77294,7 +77403,7 @@ var VolunteerApp = function VolunteerApp() {
    */
 
 
-  var handleLinkOnClick = function handleLinkOnClick(e) {
+  var onClickLink = function onClickLink(e) {
     var reportRefClassName = reportRef.current.className;
     var createRefClassName = createRef.current.className;
     var name = e.target.name;
@@ -77329,7 +77438,7 @@ var VolunteerApp = function VolunteerApp() {
 
   var indexOfFirstPage = indexOfLastPage - dataCountPerPage; // 4 - 4 = 0
 
-  var currentPageData = reliefLists.slice(indexOfFirstPage, indexOfLastPage);
+  var currentPageData = reliefAsstLists.slice(indexOfFirstPage, indexOfLastPage);
 
   var paginate = function paginate(pageNumber) {
     return setCurrentPage(pageNumber);
@@ -77354,12 +77463,12 @@ var VolunteerApp = function VolunteerApp() {
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     setErrorMessages({});
-    getReliefLists();
+    getReliefAsstLists();
   }, [navigate]); // Channels
 
   Object(react__WEBPACK_IMPORTED_MODULE_1__["useEffect"])(function () {
     receivedReliefAsstEvent();
-    getConstituentsLists();
+    getRecipients();
   }, []);
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
     className: "container-fluid"
@@ -77378,7 +77487,7 @@ var VolunteerApp = function VolunteerApp() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
     name: "report-link",
     ref: reportRef,
-    onClick: handleLinkOnClick,
+    onClick: onClickLink,
     className: "nav-link active",
     "aria-current": "true",
     href: "#"
@@ -77387,7 +77496,7 @@ var VolunteerApp = function VolunteerApp() {
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("a", {
     name: "create-relief-link",
     ref: createRef,
-    onClick: handleLinkOnClick,
+    onClick: onClickLink,
     className: "nav-link",
     href: "#",
     tabIndex: "-1",
@@ -77400,16 +77509,16 @@ var VolunteerApp = function VolunteerApp() {
     className: "card-text text-center"
   }, "With supporting text below as a natural lead-in to additional content."), navigate === 'create-relief-link' ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Forms_AutoForm__WEBPACK_IMPORTED_MODULE_4__["default"], {
     form: _configs_create_relief__WEBPACK_IMPORTED_MODULE_3__["default"],
-    onSubmit: handleOnStore,
+    onSubmit: handleOnStoreReliefAsst,
     errorMessages: errorMessages,
-    options: constituents
+    options: recipients
   }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(react__WEBPACK_IMPORTED_MODULE_1___default.a.Fragment, null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_Tables_ReliefSentList__WEBPACK_IMPORTED_MODULE_5__["default"], {
     reliefLists: currentPageData,
-    handleOnEdit: handleOnEdit,
+    handleOnEdit: handleOnEditReliefAsst,
     handleOnDelete: handleOnDelete,
     loading: loading,
     dataCountPerPage: dataCountPerPage,
-    totalCountOfData: reliefLists.length,
+    totalCountOfData: reliefAsstLists.length,
     paginate: paginate,
     nextPage: nextPage,
     prevPage: prevPage,
@@ -77615,7 +77724,6 @@ var AutoForm = function AutoForm(_ref) {
         value: value
       }) : field;
     });
-    console.log("".concat(name, " = ").concat(value));
     setFields(newData);
   };
   /**
@@ -77709,7 +77817,8 @@ var Field = function Field(_ref) {
   console.log('Render Field');
 
   var label = field.label,
-      attributes = _objectWithoutProperties(field, ["label"]);
+      optionDefaultValue = field.optionDefaultValue,
+      attributes = _objectWithoutProperties(field, ["label", "optionDefaultValue"]);
 
   var errorMessagesKeys = Object.keys(errorMessages);
   /**
@@ -77762,7 +77871,7 @@ var Field = function Field(_ref) {
         }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
           key: 'uniqueKey',
           value: ""
-        }, attributes.optionDefault), options.map(function (option) {
+        }, optionDefaultValue), options.map(function (option) {
           return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("option", {
             key: option.id,
             value: option.id
@@ -78018,27 +78127,27 @@ var AdminReliefAsstLists = function AdminReliefAsstLists(props) {
   return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("table", {
     className: "table table-hover"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("thead", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "#"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Category"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Product Name"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "To"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", null, "Status"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("th", {
-    colSpan: "2"
+    colSpan: "4"
   }, "Action"))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tbody", null, props.loading ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", {
     colSpan: "6"
-  }, " ", /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
     src: "../../../../../storage/ssr/loading.gif",
     className: "img w-100",
     alt: ""
-  }), " ")) : props.usersReliefLists.map(function (user) {
+  }))) : props.usersReliefLists.map(function (user) {
     return user.relief_goods.map(function (reliefGood) {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("tr", {
         key: reliefGood.id
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, user.id, " "), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, user.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefGood.category), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefGood.name), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, reliefGood.to), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Badge_Badge__WEBPACK_IMPORTED_MODULE_2__["default"], {
-        className: isApproved(reliefGood.pivot.is_approved),
+        className: isApproved(reliefGood.pivot.is_sent),
         icon: true,
         successIcon: 'far fa-thumbs-up fa-2x',
         failIcon: 'fas fa-spinner fa-2x',
-        status: reliefGood.pivot.is_approved
+        status: reliefGood.pivot.is_sent
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, !reliefGood.pivot.is_approved ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_Button__WEBPACK_IMPORTED_MODULE_1__["default"], {
         className: 'btn btn-outline-success',
         onClick: function onClick() {
-          return props.approveUser({
+          return props.onClickApproveReliefAsst({
             user_id: reliefGood.pivot.user_id,
             relief_good_id: reliefGood.pivot.relief_good_id
           });
@@ -78047,7 +78156,7 @@ var AdminReliefAsstLists = function AdminReliefAsstLists(props) {
       }) : /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_Button__WEBPACK_IMPORTED_MODULE_1__["default"], {
         className: 'btn btn-warning',
         onClick: function onClick() {
-          return props.disApproveUser({
+          return props.onClickDisapproveReliefAsst({
             user_id: reliefGood.pivot.user_id,
             relief_good_id: reliefGood.pivot.relief_good_id
           });
@@ -78057,7 +78166,7 @@ var AdminReliefAsstLists = function AdminReliefAsstLists(props) {
         className: 'btn-outline-dark',
         btnName: 'Collect',
         onClick: function onClick() {
-          return props.handleReliefAsstHasReceived({
+          return props.onClickReliefAsstHasReceived({
             user_id: reliefGood.pivot.user_id,
             relief_good_id: reliefGood.pivot.relief_good_id
           });
@@ -78066,9 +78175,20 @@ var AdminReliefAsstLists = function AdminReliefAsstLists(props) {
         className: 'btn-warning',
         btnName: 'Collected',
         onClick: function onClick() {
-          return props.handleRelieveReceivedReliefAsst({
+          return props.onClickRelieveReceivedReliefAsst({
             user_id: reliefGood.pivot.user_id,
             relief_good_id: reliefGood.pivot.relief_good_id
+          });
+        }
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_Button__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        className: 'btn btn-outline-primary',
+        icon: true,
+        defaultIcon: 'fas fa-truck',
+        onClick: function onClick() {
+          return props.onClickDispatchReliefAsst({
+            user_id: reliefGood.pivot.user_id,
+            relief_good_id: reliefGood.pivot.relief_good_id,
+            recipient_id: reliefGood.pivot.recipient_id
           });
         }
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("td", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Buttons_Button__WEBPACK_IMPORTED_MODULE_1__["default"], {
@@ -78076,14 +78196,14 @@ var AdminReliefAsstLists = function AdminReliefAsstLists(props) {
         icon: true,
         defaultIcon: 'fas fa-trash',
         onClick: function onClick() {
-          return props.handleRemoveReliefAsst({
+          return props.onClickRemoveReliefAsst({
             user_id: reliefGood.pivot.user_id,
             relief_good_id: reliefGood.pivot.relief_good_id
           });
         }
       })));
     });
-  }))), !loading && props.reliefListsTotalCount ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pagination__WEBPACK_IMPORTED_MODULE_3__["default"], {
+  }))), !props.loading && props.reliefListsTotalCount ? /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Pagination__WEBPACK_IMPORTED_MODULE_3__["default"], {
     dataCountPerPage: props.dataCountPerPage,
     totalCountOfData: props.reliefListsTotalCount,
     paginate: props.paginate,
@@ -78226,19 +78346,25 @@ var ReliefReceivedLists = function ReliefReceivedLists(props) {
     className: "modal-content"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "modal-header"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h5", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h3", {
     className: "modal-title",
     id: "showReliefGoodsLabel"
-  }, "Modal title"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  }, "Relief Assistance Info."), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     type: "button",
     className: "btn btn-default btn-close",
     "data-dismiss": "modal",
     "aria-label": "Close"
   }, "X")), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "modal-body"
-  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("h1", null, "Relief Good Info"), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "row"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
+    className: "col col-xl-12"
+  }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("img", {
+    src: "../../../../../storage/ssr/loading.gif",
+    className: "img w-100",
+    alt: ""
+  })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col col-xl-12 row"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col col-xl-4"
@@ -78254,7 +78380,7 @@ var ReliefReceivedLists = function ReliefReceivedLists(props) {
     type: "button",
     className: "btn btn-primary"
   }, "Understood"))))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
-    className: "row d-flex justify-content-center"
+    className: "row d-flex float-right"
   }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
     className: "col col-xl-10"
   }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", {
@@ -78400,7 +78526,7 @@ __webpack_require__.r(__webpack_exports__);
     name: 'to',
     type: 'select',
     label: 'To',
-    optionDefault: 'Donate to...',
+    optionDefaultValue: 'Donate to...',
     className: 'form-control'
   }]
 });
@@ -78411,18 +78537,18 @@ __webpack_require__.r(__webpack_exports__);
 /*!*****************************************************!*\
   !*** ./resources/js/relief-goods/services/Admin.js ***!
   \*****************************************************/
-/*! exports provided: getUserWithReliefAssistance, approveUserReliefAssistance, disApproveUserReliefAssistance, removeReliefAssistance, reliefAsstHasReceived, relieveReceivedReliefAsst, processUserReliefAssitance */
+/*! exports provided: fetchUserWithReliefAssistance, approveUserReliefAssistance, disApproveUserReliefAssistance, removeReliefAssistance, reliefAsstHasReceived, relieveReceivedReliefAsst, dispatchReliefAsst */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getUserWithReliefAssistance", function() { return getUserWithReliefAssistance; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUserWithReliefAssistance", function() { return fetchUserWithReliefAssistance; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "approveUserReliefAssistance", function() { return approveUserReliefAssistance; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "disApproveUserReliefAssistance", function() { return disApproveUserReliefAssistance; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeReliefAssistance", function() { return removeReliefAssistance; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "reliefAsstHasReceived", function() { return reliefAsstHasReceived; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "relieveReceivedReliefAsst", function() { return relieveReceivedReliefAsst; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "processUserReliefAssitance", function() { return processUserReliefAssitance; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dispatchReliefAsst", function() { return dispatchReliefAsst; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
@@ -78438,16 +78564,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
 
 
- // Fetch all user who have given relief assistance
 
-var getUserWithReliefAssistance = /*#__PURE__*/function () {
+/**
+ * * Fetch all user who have given relief assistance
+ *
+ */
+
+var fetchUserWithReliefAssistance = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
         switch (_context.prev = _context.next) {
           case 0:
             _context.next = 2;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["route"])('/admin.dashboard.relief-assistance-mngmt.volunteers')).then(function (res) {
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["route"])('/admin.dashboard.relief-assistance-mngmt.volunteers.1')).then(function (res) {
               return res.data;
             })["catch"](function (err) {
               return err.response.data;
@@ -78464,10 +78594,15 @@ var getUserWithReliefAssistance = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function getUserWithReliefAssistance() {
+  return function fetchUserWithReliefAssistance() {
     return _ref.apply(this, arguments);
   };
-}(); // Approve the relief assitance of the user
+}();
+/**
+ * * Approve the relief assitance of the user
+ *
+ * @param {*} payload
+ */
 
 var approveUserReliefAssistance = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(payload) {
@@ -78497,7 +78632,12 @@ var approveUserReliefAssistance = /*#__PURE__*/function () {
   return function approveUserReliefAssistance(_x) {
     return _ref2.apply(this, arguments);
   };
-}(); // Approve the relief assitance of the user
+}();
+/**
+ * * Disapprove the relief assitance of the user
+ *
+ * @param {*} payload
+ */
 
 var disApproveUserReliefAssistance = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(payload) {
@@ -78528,6 +78668,11 @@ var disApproveUserReliefAssistance = /*#__PURE__*/function () {
     return _ref3.apply(this, arguments);
   };
 }();
+/**
+ *
+ * @param {*} payload
+ */
+
 var removeReliefAssistance = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(payload) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
@@ -78556,6 +78701,11 @@ var removeReliefAssistance = /*#__PURE__*/function () {
     return _ref4.apply(this, arguments);
   };
 }();
+/**
+ *
+ * @param {*} payload
+ */
+
 var reliefAsstHasReceived = /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(payload) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
@@ -78584,6 +78734,11 @@ var reliefAsstHasReceived = /*#__PURE__*/function () {
     return _ref5.apply(this, arguments);
   };
 }();
+/**
+ *
+ * @param {*} payload
+ */
+
 var relieveReceivedReliefAsst = /*#__PURE__*/function () {
   var _ref6 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee6(payload) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee6$(_context6) {
@@ -78613,28 +78768,52 @@ var relieveReceivedReliefAsst = /*#__PURE__*/function () {
   };
 }();
 /**
- * Todo
- * An action where the admin can set a relief assistance as processed/already sent
+ *
+ * @param {*} payload
  */
-// Process the relief assistance of the user
 
-var processUserReliefAssitance = function processUserReliefAssitance() {
-  return 1;
-};
+var dispatchReliefAsst = /*#__PURE__*/function () {
+  var _ref7 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee7(payload) {
+    return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee7$(_context7) {
+      while (1) {
+        switch (_context7.prev = _context7.next) {
+          case 0:
+            _context7.next = 2;
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.post(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["route"])('/admin.dashboard.relief-assistance-mngmt.volunteers.dispatch'), Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["toFormData"])(payload, 'PUT')).then(function (res) {
+              return true;
+            })["catch"](function (err) {
+              return err.response.data.message;
+            });
+
+          case 2:
+            return _context7.abrupt("return", _context7.sent);
+
+          case 3:
+          case "end":
+            return _context7.stop();
+        }
+      }
+    }, _callee7);
+  }));
+
+  return function dispatchReliefAsst(_x6) {
+    return _ref7.apply(this, arguments);
+  };
+}();
 
 /***/ }),
 
-/***/ "./resources/js/relief-goods/services/Users/Constituent.js":
-/*!*****************************************************************!*\
-  !*** ./resources/js/relief-goods/services/Users/Constituent.js ***!
-  \*****************************************************************/
-/*! exports provided: fetchAuthenticatedUser, fetchUserReceivedReliefAsstLists */
+/***/ "./resources/js/relief-goods/services/Users/Recipient.js":
+/*!***************************************************************!*\
+  !*** ./resources/js/relief-goods/services/Users/Recipient.js ***!
+  \***************************************************************/
+/*! exports provided: fetchAuthenticatedUser, fetchReceivedReliefAsstLists */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchAuthenticatedUser", function() { return fetchAuthenticatedUser; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchUserReceivedReliefAsstLists", function() { return fetchUserReceivedReliefAsstLists; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchReceivedReliefAsstLists", function() { return fetchReceivedReliefAsstLists; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Helpers/FormData.js */ "./resources/js/relief-goods/components/Helpers/FormData.js");
@@ -78676,14 +78855,14 @@ var fetchAuthenticatedUser = /*#__PURE__*/function () {
     return _ref.apply(this, arguments);
   };
 }();
-var fetchUserReceivedReliefAsstLists = /*#__PURE__*/function () {
+var fetchReceivedReliefAsstLists = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.next = 2;
-            return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_1__["route"])('/cons.relief-asst.receive')).then(function (res) {
+            return axios__WEBPACK_IMPORTED_MODULE_2___default.a.get(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_1__["route"])('/rcpt.relief-asst.receive')).then(function (res) {
               return res.data;
             })["catch"](function (err) {
               return err.response.data;
@@ -78700,7 +78879,7 @@ var fetchUserReceivedReliefAsstLists = /*#__PURE__*/function () {
     }, _callee2);
   }));
 
-  return function fetchUserReceivedReliefAsstLists() {
+  return function fetchReceivedReliefAsstLists() {
     return _ref2.apply(this, arguments);
   };
 }();
@@ -78711,16 +78890,16 @@ var fetchUserReceivedReliefAsstLists = /*#__PURE__*/function () {
 /*!***************************************************************!*\
   !*** ./resources/js/relief-goods/services/Users/Volunteer.js ***!
   \***************************************************************/
-/*! exports provided: index, getConstituents, store, update, destroy */
+/*! exports provided: fetchReliefAsstLists, fetchRecipients, saveReliefAsst, renewReliefAsst, removeReliefAsst */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "index", function() { return index; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getConstituents", function() { return getConstituents; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "store", function() { return store; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "update", function() { return update; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "destroy", function() { return destroy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchReliefAsstLists", function() { return fetchReliefAsstLists; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "fetchRecipients", function() { return fetchRecipients; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "saveReliefAsst", function() { return saveReliefAsst; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "renewReliefAsst", function() { return renewReliefAsst; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "removeReliefAsst", function() { return removeReliefAsst; });
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var axios__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
@@ -78745,7 +78924,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
  * Fetch a lists
  */
 
-var index = /*#__PURE__*/function () {
+var fetchReliefAsstLists = /*#__PURE__*/function () {
   var _ref = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
       while (1) {
@@ -78769,18 +78948,18 @@ var index = /*#__PURE__*/function () {
     }, _callee);
   }));
 
-  return function index() {
+  return function fetchReliefAsstLists() {
     return _ref.apply(this, arguments);
   };
 }();
-var getConstituents = /*#__PURE__*/function () {
+var fetchRecipients = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
       while (1) {
         switch (_context2.prev = _context2.next) {
           case 0:
             _context2.next = 2;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["route"])('/vol.relief-assistance.constituents-lists')).then(function (res) {
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a.get(Object(_components_Helpers_FormData_js__WEBPACK_IMPORTED_MODULE_3__["route"])('/vol.relief-assistance.recipients-lists')).then(function (res) {
               return res.data;
             })["catch"](function (err) {
               return err.response.data;
@@ -78797,7 +78976,7 @@ var getConstituents = /*#__PURE__*/function () {
     }, _callee2);
   }));
 
-  return function getConstituents() {
+  return function fetchRecipients() {
     return _ref2.apply(this, arguments);
   };
 }();
@@ -78810,7 +78989,7 @@ var getConstituents = /*#__PURE__*/function () {
  * @param {*} payload
  */
 
-var store = /*#__PURE__*/function () {
+var saveReliefAsst = /*#__PURE__*/function () {
   var _ref3 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(payload) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
       while (1) {
@@ -78845,7 +79024,7 @@ var store = /*#__PURE__*/function () {
     }, _callee3);
   }));
 
-  return function store(_x) {
+  return function saveReliefAsst(_x) {
     return _ref3.apply(this, arguments);
   };
 }();
@@ -78858,7 +79037,7 @@ var store = /*#__PURE__*/function () {
  * @param {*} payload
  */
 
-var update = /*#__PURE__*/function () {
+var renewReliefAsst = /*#__PURE__*/function () {
   var _ref4 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(payload) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
       while (1) {
@@ -78882,7 +79061,7 @@ var update = /*#__PURE__*/function () {
     }, _callee4);
   }));
 
-  return function update(_x2) {
+  return function renewReliefAsst(_x2) {
     return _ref4.apply(this, arguments);
   };
 }();
@@ -78895,14 +79074,14 @@ var update = /*#__PURE__*/function () {
  * @param {*} id
  */
 
-var destroy = /*#__PURE__*/function () {
+var removeReliefAsst = /*#__PURE__*/function () {
   var _ref5 = _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(id) {
     return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
       while (1) {
         switch (_context5.prev = _context5.next) {
           case 0:
             _context5.next = 2;
-            return axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]("/vol.relief-assistance?id=".concat(id)).then(function (res) {
+            return axios__WEBPACK_IMPORTED_MODULE_1___default.a["delete"]("/vol/relief-assistance/".concat(id)).then(function (res) {
               return true;
             })["catch"](function (err) {
               return err.response.data;
@@ -78919,7 +79098,7 @@ var destroy = /*#__PURE__*/function () {
     }, _callee5);
   }));
 
-  return function destroy(_x3) {
+  return function removeReliefAsst(_x3) {
     return _ref5.apply(this, arguments);
   };
 }();

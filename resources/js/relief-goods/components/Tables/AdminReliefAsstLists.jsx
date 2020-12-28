@@ -21,7 +21,7 @@ const AdminReliefAsstLists = (props) =>
                         <th>Product Name</th>
                         <th>To</th>
                         <th>Status</th>
-                        <th colSpan='2'>Action</th>
+                        <th colSpan='4'>Action</th>
                     </tr>
                 </thead>
 
@@ -29,7 +29,9 @@ const AdminReliefAsstLists = (props) =>
                 {
                     props.loading
                         ?   <tr >
-                                <td colSpan='6'> <img src="../../../../../storage/ssr/loading.gif" className='img w-100' alt=""/> </td>
+                                <td colSpan='6'>
+                                    <img src="../../../../../storage/ssr/loading.gif" className='img w-100' alt=""/>
+                                </td>
                             </tr>
                         : props.usersReliefLists.map( user =>
                         (
@@ -43,11 +45,11 @@ const AdminReliefAsstLists = (props) =>
                                     <td>{ reliefGood.to }</td>
                                     <td>
                                         <Badge
-                                            className={ isApproved(reliefGood.pivot.is_approved) }
+                                            className={ isApproved(reliefGood.pivot.is_sent) }
                                             icon={ true }
                                             successIcon={ 'far fa-thumbs-up fa-2x' }
                                             failIcon={ 'fas fa-spinner fa-2x' }
-                                            status={ reliefGood.pivot.is_approved }
+                                            status={ reliefGood.pivot.is_sent }
                                         />
                                     </td>
                                     <td>
@@ -55,7 +57,7 @@ const AdminReliefAsstLists = (props) =>
                                             !reliefGood.pivot.is_approved
                                                 ? <Button
                                                     className={ 'btn btn-outline-success' }
-                                                    onClick={ () => props.approveUser(
+                                                    onClick={ () => props.onClickApproveReliefAsst(
                                                     {
                                                         user_id: reliefGood.pivot.user_id,
                                                         relief_good_id: reliefGood.pivot.relief_good_id,
@@ -64,7 +66,7 @@ const AdminReliefAsstLists = (props) =>
                                                 />
                                                 : <Button
                                                     className={ 'btn btn-warning' }
-                                                    onClick={ () => props.disApproveUser(
+                                                    onClick={ () => props.onClickDisapproveReliefAsst(
                                                     {
                                                         user_id: reliefGood.pivot.user_id,
                                                         relief_good_id: reliefGood.pivot.relief_good_id,
@@ -79,7 +81,7 @@ const AdminReliefAsstLists = (props) =>
                                                 ? <Button
                                                     className={ 'btn-outline-dark' }
                                                     btnName={ 'Collect' }
-                                                    onClick={ () => props.handleReliefAsstHasReceived(
+                                                    onClick={ () => props.onClickReliefAsstHasReceived(
                                                     {
                                                         user_id: reliefGood.pivot.user_id,
                                                         relief_good_id: reliefGood.pivot.relief_good_id,
@@ -88,7 +90,7 @@ const AdminReliefAsstLists = (props) =>
                                                 :  <Button
                                                         className={ 'btn-warning' }
                                                         btnName={ 'Collected' }
-                                                        onClick={ () => props.handleRelieveReceivedReliefAsst(
+                                                        onClick={ () => props.onClickRelieveReceivedReliefAsst(
                                                         {
                                                             user_id: reliefGood.pivot.user_id,
                                                             relief_good_id: reliefGood.pivot.relief_good_id,
@@ -97,11 +99,26 @@ const AdminReliefAsstLists = (props) =>
                                         }
                                     </td>
                                     <td>
+                                        {
+                                            <Button
+                                                className={ 'btn btn-outline-primary'}
+                                                icon={ true }
+                                                defaultIcon={ 'fas fa-truck' }
+                                                onClick= { () => props.onClickDispatchReliefAsst(
+                                                {
+                                                    user_id: reliefGood.pivot.user_id,
+                                                    relief_good_id: reliefGood.pivot.relief_good_id,
+                                                    recipient_id: reliefGood.pivot.recipient_id,
+                                                })}
+                                            />
+                                        }
+                                    </td>
+                                    <td>
                                         <Button
                                             className={ 'btn btn-outline-danger' }
                                             icon={ true }
                                             defaultIcon={ 'fas fa-trash' }
-                                            onClick={ () => props.handleRemoveReliefAsst(
+                                            onClick={ () => props.onClickRemoveReliefAsst(
                                             {
                                                 user_id: reliefGood.pivot.user_id,
                                                 relief_good_id: reliefGood.pivot.relief_good_id,
@@ -116,7 +133,7 @@ const AdminReliefAsstLists = (props) =>
             </table>
 
             {
-                !loading && props.reliefListsTotalCount
+                !props.loading && props.reliefListsTotalCount
                     ? <Pagination
                         dataCountPerPage={ props.dataCountPerPage }
                         totalCountOfData={ props.reliefListsTotalCount }

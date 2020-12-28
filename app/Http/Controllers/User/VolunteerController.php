@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers\User;
 
-use App\Events\NewReliefAssistance;
 use App\Models\User;
 use App\Models\ReliefGood;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use App\Events\NewReliefAssistanceEvent;
+use App\Events\OnRemoveReliefAssistanceEvent;
+use App\Http\Controllers\ReliefGoodController;
 use App\Http\Requests\ReliefGood\StoreReliefGood;
 use App\Http\Requests\ReliefGood\UpdateReliefGood;
 
@@ -14,39 +17,31 @@ class VolunteerController extends Controller
 {
 
     private $user;
+    private $reliefGoodController;
 
-    public function __construct(User $user)
+    public function __construct(User $user, ReliefGoodController $reliefGoodController)
     {
         $this->user = $user;
-    }
-
-    /**
-     * Show the application dashboard.
-     *
-     * @return \Illuminate\Contracts\Support\Renderable
-     */
-    public function dashboard()
-    {
-        return view('users.volunteer.dashboard');
+        $this->reliefGoodController = $reliefGoodController;
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    ! GET Requests
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+* GET Requests
+|--------------------------------------------------------------------------
+*/
 
     /**
      * Show all user with a role of 'constituent'
      *
      * @return JSON response
      */
-    public function showConstituentsLists(Request $request)
+    public function showVolunteerRecipientsLists(Request $request)
     {
         if ($request->wantsJson())
         {
-            return response()->json($this->user->constituents(), 200);
+            return response()->json($this->user->recipients(), 200);
         }
     }
 
@@ -64,11 +59,11 @@ class VolunteerController extends Controller
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    ! POST Requests
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+* POST Requests
+|--------------------------------------------------------------------------
+*/
 
     /**
      * Storing relief good created/sent by the user
@@ -77,11 +72,14 @@ class VolunteerController extends Controller
      */
     public function store(StoreReliefGood $request)
     {
+        $request->user()->giveReliefAssistanceTo(
+            $this->reliefGoodController->store($request),
+            $request->to
+        );
 
-        $request->user()->giveReliefAssistanceTo($this->validator($request)->id, $request->to);
-        $newReliefAsst = $request->user()->relief_goods()->with('users')->latest()->get()->first();
+        $reliefAsst = $request->user()->getLastCreatedReliefAsst();
 
-        event(new NewReliefAssistance($newReliefAsst));
+        event(new NewReliefAssistanceEvent($reliefAsst));
 
         if ($request->wantsJson())
         {
@@ -90,11 +88,11 @@ class VolunteerController extends Controller
     }
 
 
-    /*
-    |--------------------------------------------------------------------------
-    ! PUT Requests
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+* PUT Requests
+|--------------------------------------------------------------------------
+*/
 
     public function update(UpdateReliefGood $request)
     {
@@ -105,44 +103,38 @@ class VolunteerController extends Controller
     }
 
 
-
-    /*
-    |--------------------------------------------------------------------------
-    ! DELETE Requests
-    |--------------------------------------------------------------------------
-    */
+/*
+|--------------------------------------------------------------------------
+* DELETE Requests
+|--------------------------------------------------------------------------
+*/
     /**
      * Removing the relief assistance created/sent by the User('Volunteer')
      *
      * @return JSON response
      */
-    public function destroy(Request $request)
+    public function destroyReliefAsst(Request $request, $reliefGoodId)
     {
-        $isDestroyed = false;
+        $reliefAsstInfo = $request->user()->findReliefAsst($reliefGoodId);
+        $recipient = User::find($reliefAsstInfo->pivot->recipient_id);
+        $reliefGood = ReliefGood::find($reliefGoodId);
 
-        if ($request->user('web')->removeReliefAssistanceTo($request->id))
+        $isReliefAsstRemoved = $request->user()->removeReliefAssistanceTo($reliefGoodId);
+
+        if ($isReliefAsstRemoved)
         {
-            $isDestroyed = true;
+            $this->reliefGoodController->destroyReliefGood($reliefGoodId);
+
+            event(new OnRemoveReliefAssistanceEvent(
+                    $recipient,
+                    $reliefGood
+            ));
         }
 
         if ($request->wantsJson())
         {
-            $message = $isDestroyed ? 'Success' : 'Only volunteers can remove a relief assistance';
-            $code = $isDestroyed ? 200 : 401;
-
-            return response()->json([ 'message' => $message ], $code);
+            return response()->json([], 200);
         }
-    }
-
-    protected function validator($request)
-    {
-        return ReliefGood::create(
-        [
-            'category' => $request->category,
-            'name' =>  $request->name,
-            'quantity' =>  $request->quantity,
-            'to' =>  $this->user->find($request->to)->name,
-        ]);
     }
 
 }

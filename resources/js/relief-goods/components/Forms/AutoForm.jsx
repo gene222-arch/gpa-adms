@@ -32,11 +32,12 @@ const AutoForm = ({ form, onSubmit, errorMessages, options }) =>
     const handleOnChange = (e) =>
     {
         const { name, value } = e.target;
+
         const newData = fields.map(field =>
             field.name === name
                 ? { ...field, value }
                 : field);
-        console.log(`${name} = ${value}`)
+
         setFields(newData);
     };
 

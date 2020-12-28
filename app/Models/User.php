@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Traits\Users\RecipientServices;
+use App\Traits\Users\VolunteerServices;
 use Illuminate\Http\Request;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
@@ -11,8 +13,14 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
+    /**
+     * Imported Traits
+     */
     use HasFactory, Notifiable, HasRoles;
-
+    /**
+     * Custom Traits
+     */
+    use VolunteerServices, RecipientServices;
     /**
      * The attributes that are mass assignable.
      *
@@ -44,23 +52,21 @@ class User extends Authenticatable
     ];
 
 
-
-    /**
-    |--------------------------------------------------------------------------
-    |  Relationships
-    |--------------------------------------------------------------------------
-    */
-
     /**
      * belongsToMany Relationship with 'relief_good' table
+     * idName: 'user_id'
+     * reliefGoodIdName: 'relief_id'
      *
      * @return type Many to Many
      */
     public function relief_goods()
     {
-        return $this->belongsToMany(ReliefGood::class, 'user_relief_good')
+        return $this->belongsToMany(
+            ReliefGood::class,
+            'user_relief_good'
+            )
                     ->withPivot(
-                        'constituent_id',
+                        'recipient_id',
                         'is_approved', 'approved_at',
                         'is_received', 'received_at',
                         'is_sent', 'sent_at'
@@ -69,9 +75,21 @@ class User extends Authenticatable
                     ->withTimestamps();
     }
 
-    public function relief_goods_by_constituents()
+    /**
+     * belongsToMany Relationship with 'relief_good' table
+     * idName: 'recipient_id'
+     * reliefGoodIdName: 'relief_id'
+     *
+     * @return type Many to Many
+     */
+    public function relief_goods_by_recipients()
     {
-        return $this->belongsToMany(ReliefGood::class, 'user_relief_good', 'constituent_id', 'relief_good_id')
+        return $this->belongsToMany(
+            ReliefGood::class,
+            'user_relief_good',
+            'recipient_id',
+            'relief_good_id'
+            )
                     ->withPivot(
                         'user_id',
                         'is_sent', 'sent_at'
@@ -80,128 +98,5 @@ class User extends Authenticatable
                     ->withTimestamps()
                     ->orderByPivot('created_at', 'desc');
     }
-
-    /**
-    |--------------------------------------------------------------------------
-    | Custom Functions for Roles
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Fetch all users with a role of 'volunteer'
-     *
-     * @return collection
-     */
-    public function volunteers()
-    {
-        return $this->whereHas('roles', fn($q) => $q->where('name', 'volunteer'))->get();
-    }
-
-    /**
-     * Fetch all users with a role of 'constituent'
-     *
-     * @return collection
-     */
-    public function constituents()
-    {
-        return $this->whereHas('roles', fn($q) => $q->where('name', 'constituent'))
-                    ->orderBy('name', 'asc')
-                    ->get();
-    }
-
-    /**
-     * Check if the user has a role of 'Volunteer'
-     *
-     * @return boolean
-     */
-    public function isVolunteer(): bool
-    {
-        return $this->hasRole('volunteer');
-    }
-
-    /**
-     * Check if the user has a role of 'Constituent'
-     *
-     * @return boolean
-     */
-    public function isConstituent(): bool
-    {
-        return $this->hasRole('constituent');
-    }
-
-    /**
-    |--------------------------------------------------------------------------
-    | relief_goods Table Relationship
-    |--------------------------------------------------------------------------
-    */
-
-    /**
-     * Attach new relief data to Pivot Table ("user_relief_good")
-     *
-     *
-     */
-    public function giveReliefAssistanceTo($reliefGood, $constituent_id)
-    {
-        return $this->relief_goods()->attach($reliefGood, [ 'constituent_id' => $constituent_id ]);
-    }
-
-    /**
-     * Detach a users relief assistance in the Pivot Table("user_relief_good")
-     *
-     * @return array
-     */
-    public function removeReliefAssistanceTo($constituent_id)
-    {
-        return $this->relief_goods()->detach($constituent_id);
-    }
-
-    /**
-     * Todo
-     * Allow users to view the relief he/she created/sent that is still pending
-     */
-    public function onProcessReliefAssistance()
-    {
-        return $this->relief_goods()
-                    ->where('is_sent', false)
-                    ->get();
-    }
-
-    /**
-     * Todo
-     * Allow users to view the relief he/she created/sent that is approved by the Admin
-     */
-    public function approvedReliefAssistance()
-    {
-        return $this->relief_goods()
-                    ->wherePivot('is_approved', true)
-                    ->get();
-    }
-
-    /**
-     * Todo
-     * Allow users to view the relief he/she created/sent that was already processed
-     */
-    public function processedReliefAssistance()
-    {
-        return $this->relief_goods()
-                    ->wherePivot('is_approved', true)
-                    ->wherePivot('is_received', true)
-                    ->get();
-    }
-
-    /**
-     * Todo
-     * Allow users to view the constituents who received his/her relief assistance
-     */
-
-    public function constituentsWithReceivedReliefAsst()
-    {
-        return $this->relief_goods()
-                    ->wherePivot('is_approved', true)
-                    ->wherePivot('is_received', true)
-                    ->wherePivot('is_sent', true)
-                    ->get();
-    }
-
 
 }

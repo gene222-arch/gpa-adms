@@ -1,21 +1,34 @@
 import React from 'react';
 import ReactDOM from 'react-dom'
 import VolunteerApp from './relief-goods/VolunteerApp'
-import ConstituentApp from './relief-goods/ConstituentApp'
+import Recipient from './relief-goods/RecipientApp'
 import AdminApp from './relief-goods/AdminApp'
 
-if (document.getElementById('relief'))
-{
-    ReactDOM.render(<VolunteerApp />, document.getElementById('relief'));
-}
 
-if (document.getElementById('my-received-relief-asst-lists'))
-{
-    ReactDOM.render(<ConstituentApp />, document.getElementById('my-received-relief-asst-lists'));
-}
-
+/**
+ * Admin Components
+ */
 if (document.getElementById('volunteer-relief-assistance-mngmt'))
 {
     ReactDOM.render(<AdminApp />, document.getElementById('volunteer-relief-assistance-mngmt'));
 }
+
+/**
+ * Volunteer Components
+ */
+if (document.getElementById('on-process-and-create-relief-asst'))
+{
+    ReactDOM.render(<VolunteerApp />, document.getElementById('on-process-and-create-relief-asst'));
+}
+
+
+/**
+ * Recipient Components
+ */
+if (document.getElementById('my-received-relief-asst-lists'))
+{
+    ReactDOM.render(<Recipient />, document.getElementById('my-received-relief-asst-lists'));
+}
+
+
 

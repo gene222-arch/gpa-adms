@@ -13,7 +13,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class NewReliefAssistance implements ShouldBroadcastNow
+class NewReliefAssistanceEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -38,15 +38,11 @@ class NewReliefAssistance implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new PrivateChannel('cons.relief-asst.receive.' . $this->reliefAssistanceInfo->pivot->constituent_id);
-        /**
-         * Multiple Channles
-         *
-         * return [
-         *   new Channel('channel-1'),
-         *   new Channel('channel-2'),
-         * ]
-         */
+        return [
+            new PrivateChannel('rcpt.relief-asst.receive.' . $this->reliefAssistanceInfo->pivot->recipient_id),
+            new PrivateChannel('admin.dashboard.relief-assistance-mngmt.volunteers.1') //Super Admin
+        ];
+
     }
 
     public function broadcastWith()
@@ -68,7 +64,7 @@ class NewReliefAssistance implements ShouldBroadcastNow
                 'id' => $this->reliefAssistanceInfo->pivot->id,
                 'user_id' => $this->reliefAssistanceInfo->pivot->user_id,
                 'relief_good_id' => $this->reliefAssistanceInfo->pivot->relief_good_id,
-                'constituent_id' => $this->reliefAssistanceInfo->pivot->constituent_id,
+                'recipient_id' => $this->reliefAssistanceInfo->pivot->recipient_id,
                 'is_sent' => $this->reliefAssistanceInfo->pivot->is_sent,
                 'sent_at' => $this->reliefAssistanceInfo->pivot->sent_at,
             ]

@@ -42,9 +42,9 @@ class RedirectIfAuthenticated
                  */
                 if ($guard === 'web')
                 {
-                    if (Auth::user()->hasRole('constituent'))
+                    if (Auth::user()->hasRole('recipient'))
                     {
-                        return redirect()->route('constituent.dashboard');
+                        return redirect()->route('recipient.dashboard');
                     }
 
                     if (Auth::user()->hasRole('volunteer'))

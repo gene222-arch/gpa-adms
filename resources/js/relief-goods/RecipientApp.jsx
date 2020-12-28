@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { fetchAuthenticatedUser, fetchUserReceivedReliefAsstLists } from './services/Users/Constituent'
-import  ReliefReceivedLists from '../relief-goods/components/Tables/ReliefReceivedLists'
+import { fetchAuthenticatedUser, fetchReceivedReliefAsstLists } from './services/Users/Recipient'
+import  ReliefReceivedLists from './components/Tables/ReliefReceivedLists'
 
-const ConstituentApp = () =>
+const RecipientApp = () =>
 {
 
     const [ authenticatedUser, setAuthenticatedUser ] = useState({});
@@ -21,7 +21,9 @@ const ConstituentApp = () =>
 
     const indexOfLastPage = currentPage * dataCountPerPage;
     const indexOfFirstPage = indexOfLastPage -  dataCountPerPage;
-    const currentPageData = receivedReliefAsst.slice(indexOfFirstPage, indexOfLastPage);
+    const currentPageData = receivedReliefAsst
+        ? receivedReliefAsst.slice(indexOfFirstPage, indexOfLastPage)
+        : [];
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
     const nextPage = () => setCurrentPage( prevPageNumber => prevPageNumber + 1);
@@ -40,19 +42,17 @@ const ConstituentApp = () =>
        result
            ? setAuthenticatedUser(result)
            : setAuthenticatedUser({});
-
    }
-
 
     const getUserReceivedReliefAsst = async () =>
     {
         setIsLoading(true);
 
-        const result = await fetchUserReceivedReliefAsstLists();
+        const result = await fetchReceivedReliefAsstLists();
         result
             ? setReceivedReliefAsst(result)
             : setReceivedReliefAsst([]);
-
+        console.log(result)
         setIsLoading(false);
     }
 
@@ -79,15 +79,41 @@ const ConstituentApp = () =>
 
     const listenToNewReliefAsstEvent = () =>
     {
-        Echo.private('cons.relief-asst.receive.' + authenticatedUser.id)
-            .listen('NewReliefAssistance', (reliefAsst) =>
+        Echo.private(`rcpt.relief-asst.receive.${ authenticatedUser.id }`)
+            .listen('NewReliefAssistanceEvent', (reliefAsst) =>
             {
-                console.log(reliefAsst);
                 setReceivedReliefAsst(prevVal => [ ...prevVal, reliefAsst ]);
-
-                alert('Successfully inserted')
             });
     };
+
+    const listenToRemoveReliefAsstEvent = () =>
+    {
+        Echo.private(`rcpt.relief-asst.receive.${ authenticatedUser.id }`)
+            .listen('OnRemoveReliefAssistanceEvent', (result) =>
+            {
+                setReceivedReliefAsst(prevVal => prevVal.filter(
+                    reliefAsst => reliefAsst.pivot.relief_good_id != result.relief_good_id));
+            });
+    }
+
+    const listenToDispatchReliefAsstEvent = () =>
+    {
+        Echo.private(`rcpt.relief-asst.receive.${ authenticatedUser.id }`)
+            .listen('OnDispatchReliefAssistanceEvent', (result) =>
+            {
+                const newData = receivedReliefAsst.map(data =>
+                {
+                    if ( data.id === result.relief_good_id)
+                    {
+                        data.pivot.sent_at = result.sent_at;
+                        console.log(data);
+                    }
+                    return data;
+                });
+
+                setReceivedReliefAsst(newData);
+            });
+    }
 
     /**
      * Side effects
@@ -98,10 +124,14 @@ const ConstituentApp = () =>
         getAuthenticatedUser();
     }, []);
 
+    /**
+     * * Events
+     */
     useEffect(() =>
     {
         listenToNewReliefAsstEvent();
-        console.log(authenticatedUser)
+        listenToRemoveReliefAsstEvent();
+        listenToDispatchReliefAsstEvent();
     }, [authenticatedUser]);
 
 
@@ -132,4 +162,4 @@ const ConstituentApp = () =>
     )
 }
 
-export default ConstituentApp
+export default RecipientApp

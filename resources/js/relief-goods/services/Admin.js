@@ -2,15 +2,23 @@ import Axios from "axios";
 import Swal from 'sweetalert2';
 import { toFormData, route } from '../components/Helpers/FormData.js'
 
-// Fetch all user who have given relief assistance
-export const getUserWithReliefAssistance = async () =>
+/**
+ * * Fetch all user who have given relief assistance
+ *
+ */
+export const fetchUserWithReliefAssistance = async () =>
 {
-    return await Axios.get(route('/admin.dashboard.relief-assistance-mngmt.volunteers'))
+    return await Axios.get(route('/admin.dashboard.relief-assistance-mngmt.volunteers.1'))
         .then(res => res.data)
         .catch(err => err.response.data);
 };
 
-// Approve the relief assitance of the user
+
+/**
+ * * Approve the relief assitance of the user
+ *
+ * @param {*} payload
+ */
 export const approveUserReliefAssistance = async (payload) =>
 {
     return await Axios.post(route('/admin.dashboard.relief-assistance-mngmt.volunteers.approve'),
@@ -24,7 +32,12 @@ export const approveUserReliefAssistance = async (payload) =>
 
 };
 
-// Approve the relief assitance of the user
+
+/**
+ * * Disapprove the relief assitance of the user
+ *
+ * @param {*} payload
+ */
 export const disApproveUserReliefAssistance = async (payload) =>
 {
     return await Axios.post(route('/admin.dashboard.relief-assistance-mngmt.volunteers.disapprove'),
@@ -38,6 +51,11 @@ export const disApproveUserReliefAssistance = async (payload) =>
 
 };
 
+
+/**
+ *
+ * @param {*} payload
+ */
 export const removeReliefAssistance = async (payload) =>
 {
     return await Axios.post(route('/admin.dashboard.relief-assistance-mngmt.volunteers'),
@@ -46,6 +64,10 @@ export const removeReliefAssistance = async (payload) =>
         .catch(err => console.error(err.response.data))
 };
 
+/**
+ *
+ * @param {*} payload
+ */
 export const reliefAsstHasReceived = async (payload) =>
 {
     return await Axios.post(route('/admin.dashboard.relief-assistance-mngmt.volunteers.receive'),
@@ -54,6 +76,10 @@ export const reliefAsstHasReceived = async (payload) =>
         .catch(err => err.response.data.message)
 }
 
+/**
+ *
+ * @param {*} payload
+ */
 export const relieveReceivedReliefAsst = async (payload) =>
 {
     return await Axios.post(route('/admin.dashboard.relief-assistance-mngmt.volunteers.relieve'),
@@ -63,9 +89,13 @@ export const relieveReceivedReliefAsst = async (payload) =>
 }
 
 /**
- * Todo
- * An action where the admin can set a relief assistance as processed/already sent
+ *
+ * @param {*} payload
  */
-
-// Process the relief assistance of the user
-export const processUserReliefAssitance = () => 1;
+export const dispatchReliefAsst = async (payload) =>
+{
+    return await Axios.post(route('/admin.dashboard.relief-assistance-mngmt.volunteers.dispatch'),
+    toFormData(payload, 'PUT'))
+        .then(res => true)
+        .catch(err => err.response.data.message);
+};

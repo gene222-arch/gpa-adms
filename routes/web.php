@@ -11,7 +11,9 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardCtrl;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\Admin\UserReliefManagementController;
 use App\Http\Controllers\User\VolunteerController;
-use App\Http\Controllers\User\ConstituentsController;
+use App\Http\Controllers\User\RecipientController;
+use App\Http\Controllers\User\RecipientPageController;
+use App\Http\Controllers\User\VolunteerPageController;
 use Illuminate\Http\Request;
 
 /*
@@ -29,33 +31,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/event', function () {
-    event(new ReceivedReliefAsstEvent('New Thanks bro'));
-    echo 'Mail sent!';
-});
-
-Route::get('/listen', function () {
-    return view('testBroadcast');
-});
-
 
 
 /*
 |--------------------------------------------------------------------------
-? Users: Authentication, Volunteers Controller, Constituents Controller
+? Users: Authentication, Volunteers Controller, Recipients Controller
 |--------------------------------------------------------------------------
  */
 
 /**
- * ! Users Auth: Login, Register, ResetPassword Routes
+ * * Users Auth: Login, Register, ResetPassword Routes
  */
 Auth::routes();
 
 /**
- * ! ConstituentsController
+ * ? RecipientController
  *
  * User
- * Roles: 'constituent'
+ * Roles: 'recipients'
  */
 
 Route::get('/auth-user', function (Request $request) {
@@ -67,25 +60,26 @@ Route::get('/auth-user', function (Request $request) {
 });
 
 Route::group([
-    'prefix' => 'cons',
-    'as' => 'constituent.',
-    'middleware' => 'role:constituent'
+    'prefix' => 'rcpt',
+    'as' => 'recipient.',
+    'middleware' => 'role:recipient'
 ], function ()
 {
-    Route::get('/dashboard', [ConstituentsController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard',
+        [RecipientPageController::class, 'dashboard'])->name('dashboard');
 
-    Route::group([
-        'prefix' => 'relief-asst'
-    ], function ()
+    Route::group([ 'prefix' => 'relief-asst' ], function ()
     {
-        Route::get('/receive/{user?}', [ConstituentsController::class, 'showReceivedReliefAsstLists'])->name('relief-asst.receive');
+        Route::get('/receive/{recipient?}',
+            [RecipientController::class, 'showReceivedReliefAsstLists'])->name('relief-asst.receive');
+
     });
 
 });
 
 
 /**
- * ! VolunteersControllers
+ * ? VolunteersControllers
  *
  * User
  * Roles: 'volunteer'
@@ -97,7 +91,16 @@ Route::group([
 ], function ()
 {
     // Dashboard
-    Route::get('/dashboard', [VolunteerController::class, 'dashboard'])->name('dashboard');
+    Route::get('/dashboard', [VolunteerPageController::class, 'dashboard'])->name('dashboard');
+
+    // PageController
+    Route::group([
+        'prefix' => 'relief-mngmt',
+        'as' => 'relief-mngmt.'
+    ], function () {
+        Route::get('/on-process-and-create/{volunteer?}', [VolunteerPageController::class, 'onProcessCreateReliefAsstPage'])->name('on-process-and-create');
+
+    });
 
     Route::group([
             'prefix' => 'relief-assistance',
@@ -108,10 +111,11 @@ Route::group([
          * * GET METHODS
          */
 
+
         // Fetch user role relief asst. lists
         Route::get('/', [VolunteerController::class, 'showReliefAsstLists'])->name('relief-asst-list');
-        // Fetch user with constituent role name
-        Route::get('/constituents-lists', [VolunteerController::class, 'showConstituentsLists']);
+        // Fetch user with recipient role name
+        Route::get('/recipients-lists', [VolunteerController::class, 'showVolunteerRecipientsLists']);
 
 
         /**
@@ -132,7 +136,7 @@ Route::group([
          * * DELETE METHODS
          */
 
-        Route::delete('/', [VolunteerController::class, 'destroy'])->name('relief-asst-destroy');
+        Route::delete('/{reliefGoodId}', [VolunteerController::class, 'destroyReliefAsst']);
     });
 });
 
@@ -140,15 +144,16 @@ Route::group([
 
 /*
 |--------------------------------------------------------------------------
-! Super Admin
+| Super Admin
 |--------------------------------------------------------------------------
  */
 Route::group([
     'prefix' => 'admin',
     'as' => 'admin.',], function () {
+
     /*
     |--------------------------------------------------------------------------
-    ? Login, Register, Reset Password
+    | Login, Register, Reset Password
     |--------------------------------------------------------------------------
     */
 
@@ -206,7 +211,7 @@ Route::group([
              * * Disaapprove a user's relief assistance
              */
 
-            Route::get('/relief-assistance-mngmt/volunteers',
+            Route::get('/relief-assistance-mngmt/volunteers/{superAdminId?}',
                 [ UserReliefManagementController::class, 'showVolunteersWithReliefAsst' ])
                 ->name('relief-assistance-mngmt.volunteers');
 
@@ -221,6 +226,8 @@ Route::group([
 
             Route::put('/relief-assistance-mngmt/volunteers/relieve',
                 [ UserReliefManagementController::class, 'relieveReceivedReliefAsst' ]);
+
+            Route::put('/relief-assistance-mngmt/volunteers/dispatch', [UserReliefManagementController::class, 'dispatchReliefAsst']);
 
             Route::delete('/relief-assistance-mngmt/volunteers',
                 [ UserReliefManagementController::class, 'removeReliefAsst' ]);

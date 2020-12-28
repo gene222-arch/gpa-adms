@@ -8,9 +8,9 @@ export const fetchAuthenticatedUser = async () =>
         .catch(err => err.response.data);
 };
 
-export const fetchUserReceivedReliefAsstLists = async () =>
+export const fetchReceivedReliefAsstLists = async () =>
 {
-    return await Axios.get(route('/cons.relief-asst.receive'))
+    return await Axios.get(route('/rcpt.relief-asst.receive'))
         .then(res => res.data)
         .catch(err => err.response.data)
 };

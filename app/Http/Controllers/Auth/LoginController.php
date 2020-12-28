@@ -56,7 +56,7 @@ class LoginController extends Controller
     {
         return [
             'volunteer' => 'vol/dashboard',
-            'constituent' => 'cons/dashboard'
+            'recipient' => 'rcpt/dashboard'
         ];
     }
 }

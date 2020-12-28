@@ -31,12 +31,12 @@
             @if (Auth::guard('web')->check())
 
                 @role('volunteer')
-                    @component('layouts.components.UserSidebar')
+                    @component('layouts.components.VolunteerSidebar')
                     @endcomponent
                 @endrole
 
-                @role('constituent')
-                    @component('layouts.components.ConstituentSidebar')
+                @role('recipient')
+                    @component('layouts.components.RecipientSidebar')
                     @endcomponent
                 @endrole
             @endif
@@ -51,12 +51,12 @@
                 @if (Auth::guard('web')->check())
 
                     @role('volunteer')
-                        @component('layouts.components.UserNavbar')
+                        @component('layouts.components.VolunteerNavbar')
                         @endcomponent
                     @endrole
 
-                    @role('constituent')
-                        @component('layouts.components.ConstituentNavbar')
+                    @role('recipient')
+                        @component('layouts.components.RecipientNavbar')
                         @endcomponent
                     @endrole
                 @endif

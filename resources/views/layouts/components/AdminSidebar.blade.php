@@ -39,7 +39,7 @@
         </li>
         <ul class="collapse list-unstyled" id="RAMsubMenu">
             <li class="nav-item">
-                <a class="nav-link" href="{{ route('admin.dashboard.relief-assistance-mngmt.volunteers') }}">Volunteer</a>
+                <a class="nav-link" href="{{ route('admin.dashboard.relief-assistance-mngmt.volunteers', [1]) }}">Volunteer</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Position 2</a>

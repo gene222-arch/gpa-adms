@@ -35,7 +35,7 @@ class StoreReliefGood extends BaseRequest
     public function messages()
     {
         return [
-            'to.exists' => 'This constituent does not exists',
+            'to.exists' => 'This recipient does not exists',
         ];
     }
 }

@@ -1,5 +1,5 @@
 import React,{ useState, useRef, useEffect } from 'react';
-import { index, getConstituents, store, update, destroy } from './services/Users/Volunteer'
+import { fetchReliefAsstLists, fetchRecipients, saveReliefAsst, renewReliefAsst, removeReliefAsst } from './services/Users/Volunteer'
 import createFormFields from './configs/create_relief'
 import AutoForm from './components/Forms/AutoForm'
 import ReliefSentList from './components/Tables/ReliefSentList';
@@ -10,81 +10,95 @@ const VolunteerApp = () =>
 {
     console.log('Render VolunteerApp');
 
-/**
- * ! States
- */
-    const [ reliefLists, setReliefLists ] = useState([]); // Display
-    const [ reliefList, setReliefList ] = useState({}); // Update
-    const [ constituents, setConstituents ] = useState([]); // Select options
+    const [ reliefAsstLists, setReliefAsstLists ] = useState([]); // Display
+    const [ reliefAsst, setReliefAsst ] = useState({}); // Update
+    const [ recipients, setRecipients ] = useState([]); // Select options
     const [ errorMessages, setErrorMessages ] = useState({}); // Validation
     const [ navigate, setNavigate ] = useState('report-link'); // Navigation
     const [ loading, setLoading ] = useState(false); // Loading
-/**
- * ! Pagination States
- */
+
+// Pagination States
     const [ currentPage, setCurrentPage ] = useState(1); // Page = 1
     const [ dataCountPerPage ] = useState(2); // Page 1 = No. of Data = 2
-/**
- * ! Refs
- */
+
+// Refs
     const createRef = useRef('');
     const reportRef = useRef('');
 
 
-
-
 /** * * * * * * * * *
- * ! Database
+ * * Database
  * * * * * * * * * */
 
-
-    const getReliefLists = async () =>
+    /**
+     *
+     */
+    const getReliefAsstLists = async () =>
     {
         setLoading(true); // Loading
 
-        const result = await index();
+        const result = await fetchReliefAsstLists();
         result
-            ? setReliefLists(result)
-            : setReliefLists([])
+            ? setReliefAsstLists(result)
+            : setReliefAsstLists([])
 
         setLoading(false); // Loaded
     };
 
-    const getConstituentsLists = async () =>
+    /**
+     *
+     */
+    const getRecipients = async () =>
     {
-        const result = await getConstituents();
+        const result = await fetchRecipients();
         result
-            ? setConstituents(result)
-            : setConstituents([]);
+            ? setRecipients(result)
+            : setRecipients([]);
     }
 
-    const handleOnStore = async (payload) =>
+    /**
+     *
+     * @param {*} payload
+     */
+    const handleOnStoreReliefAsst = async (payload) =>
     {
-        const result = await store(payload);
+        const result = await saveReliefAsst(payload);
         if (result !== true)
         {
             setErrorMessages(result)
         }
         else
         {
-            getReliefLists();
+            getReliefAsstLists();
             setErrorMessages({});
             Alert.onSuccess();
         }
     }
 
-    const handleOnEdit = (id) =>
+    /**
+     *
+     * @param {*} id
+     */
+    const handleOnEditReliefAsst = (id) =>
     {
-        const findById = reliefLists.find(reliefList => reliefList.id === id);
+        const findById = reliefAsstLists.find(reliefList => reliefList.id === id);
         console.log(findById);
-        findById ? setReliefList(findById) : setReliefList({});
+        findById ? setReliefAsst(findById) : setReliefAsst({});
     }
 
+    /**
+     *
+     * @param {*} payload
+     */
     const handleOnUpdate = async (payload) =>
     {
         console.log(payload);
     }
 
+    /**
+     *
+     * @param {*} id
+     */
     const handleOnDelete = async (id) =>
     {
        Swal.fire({
@@ -99,9 +113,9 @@ const VolunteerApp = () =>
         .then((result) => {
             if (result.isConfirmed)
             {
-                if (destroy(id))
+                if (removeReliefAsst(id))
                 {
-                    getReliefLists();
+                    getReliefAsstLists();
                     Alert.onDelete();
                 }
                 else
@@ -114,28 +128,16 @@ const VolunteerApp = () =>
 
 
 /** * * * * * * * * * * * * *
- * ! Pusher Notif
+ * * Events
  * * * * * * * * * * * * * */
 
+    /**
+     *
+     */
     const receivedReliefAsstEvent = () =>
     {
-        // Route: channel.php -- for BroadCast channel
-        // Echo.join('chat')
-        //     .here((users) =>
-        //     {
-        //         console.log(users);
-        //     })
-        //     .joining((user) =>
-        //     {
-        //         console.log(`${ user.name } has joined`);
-        //     })
-        //     .leaving((user) =>
-        //     {
-        //         console.log(`${ user.name } has leaved`);
-        //     });
-
-        Echo.channel('geneTVChannel')
-            .listen('ReceivedReliefAsstEvent', (e) =>
+        Echo.channel('channelName')
+            .listen('OnReceiveReliefAssistanceEvent', (e) =>
             {
                 console.log(e.message)
                 alert(e.message)
@@ -147,7 +149,7 @@ const VolunteerApp = () =>
      * ! Add/Remove of class names
      */
 
-    const handleLinkOnClick = (e) =>
+    const onClickLink = (e) =>
     {
         let reportRefClassName = reportRef.current.className;
         let createRefClassName = createRef.current.className;
@@ -175,34 +177,35 @@ const VolunteerApp = () =>
 
 
 /** * * * * * * * * * * * * *
- * ! Pagination Functions
+ * * Pagination Functions
  * * * * * * * * * * * * * */
 
     //Pagination Functions and Variables
     const indexOfLastPage = currentPage * dataCountPerPage; // No of data per page =  (1 * 4) = 4
     const indexOfFirstPage = indexOfLastPage  - dataCountPerPage; // 4 - 4 = 0
-    const currentPageData =  reliefLists.slice(indexOfFirstPage, indexOfLastPage);
+    const currentPageData =  reliefAsstLists.slice(indexOfFirstPage, indexOfLastPage);
 
     const paginate = (pageNumber) =>  setCurrentPage(pageNumber);
     const nextPage = () => setCurrentPage(prevPageNumber => prevPageNumber + 1);
     const prevPage = () => setCurrentPage(prevPageNumber => prevPageNumber - 1 );
 
+
     /**
-     * ! Side Effects
+     * ? Side Effects
      */
 
     // Reset Error Messages on changed navigation
     useEffect(() =>
     {
         setErrorMessages({});
-        getReliefLists();
+        getReliefAsstLists();
     }, [navigate])
 
     // Channels
     useEffect(() =>
     {
         receivedReliefAsstEvent();
-        getConstituentsLists();
+        getRecipients();
     }, []);
 
 
@@ -217,7 +220,7 @@ const VolunteerApp = () =>
                                     <a
                                         name='report-link'
                                         ref={ reportRef }
-                                        onClick={ handleLinkOnClick }
+                                        onClick={ onClickLink }
                                         className='nav-link active'
                                         aria-current="true" href="#">Report</a>
                                 </li>
@@ -225,7 +228,7 @@ const VolunteerApp = () =>
                                     <a
                                         name='create-relief-link'
                                         ref={ createRef }
-                                        onClick={ handleLinkOnClick }
+                                        onClick={ onClickLink }
                                         className='nav-link'
                                         href="#"
                                         tabIndex="-1"
@@ -240,18 +243,18 @@ const VolunteerApp = () =>
                                 navigate === 'create-relief-link'
                                     ? <AutoForm
                                         form={ createFormFields }
-                                        onSubmit={ handleOnStore }
+                                        onSubmit={ handleOnStoreReliefAsst }
                                         errorMessages = { errorMessages }
-                                        options={ constituents }
+                                        options={ recipients }
                                     />
                                     : <>
                                         <ReliefSentList
                                             reliefLists={ currentPageData }
-                                            handleOnEdit = { handleOnEdit }
+                                            handleOnEdit = { handleOnEditReliefAsst }
                                             handleOnDelete = { handleOnDelete }
                                             loading = { loading }
                                             dataCountPerPage={ dataCountPerPage }
-                                            totalCountOfData={ reliefLists.length }
+                                            totalCountOfData={ reliefAsstLists.length }
                                             paginate={ paginate }
                                             nextPage={ nextPage }
                                             prevPage={ prevPage }
@@ -272,5 +275,4 @@ export default React.memo(VolunteerApp);
 /**
  * ? So when we are exporting an entire array of objects
  * ? then you can import it using any kind of names
- *
  */

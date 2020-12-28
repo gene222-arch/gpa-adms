@@ -17,7 +17,7 @@ class CreateUserReliefGoodTable extends Migration
             $table->id();
             $table->foreignId('user_id');
             $table->foreignId('relief_good_id');
-            $table->foreignId('constituent_id');
+            $table->foreignId('recipient_id');
             $table->boolean('is_approved')->default(false);
             $table->boolean('is_received')->default(false);
             $table->boolean('is_sent')->default(false);

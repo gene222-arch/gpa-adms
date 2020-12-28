@@ -16,7 +16,7 @@
             </div>
             <ul class="collapse list-unstyled" id="UserManageMent">
                 <li class="nav-item">
-                    <a class="nav-link" href="{{ route('constituent.relief-asst.receive', [Auth::id()]) }}">Receive</a>
+                    <a class="nav-link" href="{{ route('recipient.relief-asst.receive', [Auth::id()]) }}">Receive</a>
                 </li>
                 {{-- <li class="nav-item">
                     <a class="nav-link" href="#">Relief On Process</a>

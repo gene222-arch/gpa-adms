@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\User;
 use App\Models\Admin;
+use App\Models\ReliefGood;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -12,11 +13,10 @@ class UserReliefManagementController extends Controller
 
     private $admin;
 
-
     /**
-     * The Constructor instance will prevent non super-admin users to access this functionality
+     * Undocumented function
      *
-     * @return void
+     * @param Admin $admin
      */
     public function __construct(Admin $admin)
     {
@@ -25,73 +25,118 @@ class UserReliefManagementController extends Controller
     }
 
     /**
-     * Fetching Users who's role is volunteer and with relief assistance
+     * Undocumented function
      *
-     * @param $request
-     * @return JSON Response
+     * @param Request $request
+     * @return void
      */
     public function showVolunteersWithReliefAsst(Request $request)
     {
         if ($request->wantsJson())
         {
-            return response()->json($this->admin->superAdmin()->getUserWithReliefAssistance());
+            return response()->json($this->admin->superAdmin()->getUsersWithReliefAssistance());
         }
 
         return view('admins.user-relief-assistance-mngmt.volunteer');
     }
 
     /**
-     * Approving a user's/volunteers relief assistance
+     * Undocumented function
      *
-     * @param $request
-     * @return JSON
+     * @param Request $request
+     * @return void
      */
     public function approveReliefAsst(Request $request)
     {
         if ($request->wantsJson())
         {
-            /**
-             * Todo
-             * Notify the user that the relief goods that he/she created/sent was approve
-             */
-            $isApproved = $this->admin->superAdmin()->approveReliefAssistance($request->user_id, $request->relief_good_id);
+            $isApproved = $this->admin
+                                ->superAdmin()
+                                ->approveReliefAssistance($request->user_id, $request->relief_good_id);
+
+            $message = $this->prepareMessageResponse(
+                $isApproved,
+                'Success',
+                'Failed'
+            );
+
+            $code = $this->prepareCodeResponse(
+                $isApproved,
+                200,
+                422
+            );
             return response()->json(
             [
                 'from' => 'Approve Relief Assistance Controller',
                 'user_id' => $request->user_id,
-                'relief_good_id' => $request->relief_good_id
-            ], 200);
+                'relief_good_id' => $request->relief_good_id,
+                'message' => $message
+            ], $code);
         }
     }
 
     /**
-     * Disapproving a user's/volunteers relief assistance
+     * Undocumented function
      *
-     * @param $request
-     * @return JSON
+     * @param Request $request
+     * @return void
      */
     public function disapproveReliefAsst(Request $request)
     {
         if ($request->wantsJson())
         {
-            $isDisapproved = $this->admin->superAdmin()->disapproveReliefAssistance($request->user_id, $request->relief_good_id);
+            $isDisapproved = $this->admin
+                                    ->superAdmin()
+                                    ->disapproveReliefAssistance($request->user_id, $request->relief_good_id);
+
+            $message = $this->prepareMessageResponse(
+                $isDisapproved,
+                'Success',
+                'Failed'
+            );
+
+            $code = $this->prepareCodeResponse(
+                $isDisapproved,
+                200,
+                422
+            );
+
             return response()->json(
             [
                 'from' => 'Disapprove Relief Assistance Controller',
                 'user_id' => $request->user_id,
-                'relief_good_id' => $request->relief_good_id
-            ], 200);
+                'relief_good_id' => $request->relief_good_id,
+                'message' => $message
+            ], $code);
         }
     }
 
-
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return void
+     */
     public function reliefAsstHasReceived(Request $request)
     {
         if ($request->wantsJson())
         {
-            $isReceived = $this->admin->superAdmin()->reliefAsstHasReceived($request->user_id, $request->relief_good_id);
-            $message = $isReceived ? 'The relief assistance has been received' : 'Approval is needed before collecting';
-            $code = $isReceived ? 200 : 406;
+            $isReceived = $this->admin
+                                ->superAdmin()
+                                ->reliefAsstHasReceived($request->user_id, $request->relief_good_id);
+
+            $message = $this->prepareMessageResponse(
+                $isReceived,
+                'The relief assistance has been received',
+                'Approval is needed before collecting'
+            );
+
+            $code = $this->prepareCodeResponse(
+                $isReceived,
+                200,
+                406
+            );
+
             return response()->json(
             [
                 'from' => 'Relief Has Receive Controller',
@@ -102,13 +147,32 @@ class UserReliefManagementController extends Controller
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return void
+     */
     public function relieveReceivedReliefAsst(Request $request)
     {
         if ($request->wantsJson())
         {
-            $isRelieved = $this->admin->superAdmin()->relieveReceivedReliefAsst($request->user_id, $request->relief_good_id);
-            $message = $isRelieved ? 'Success' : 'Approval is needed before collecting';
-            $code = $isRelieved ? 200 : 406;
+            $isRelieved = $this->admin
+                                ->superAdmin()
+                                ->relieveReceivedReliefAsst($request->user_id, $request->relief_good_id);
+
+            $message = $this->prepareMessageResponse(
+                $isRelieved,
+                'Success',
+                'Approval is needed before collecting'
+            );
+
+            $code = $this->prepareCodeResponse(
+                $isRelieved,
+                200,
+                406
+            );
+
             return response()->json([
                 'from' => 'Remove A Received Relief Asst',
                 'user_id' => $request->user_id,
@@ -118,12 +182,60 @@ class UserReliefManagementController extends Controller
         }
     }
 
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return void
+     */
+    public function dispatchReliefAsst(Request $request)
+    {
+
+        if ($request->wantsJson())
+        {
+            $userId = $request->user_id;
+            $reliefGoodId = $request->relief_good_id;
+            $recipientId = $request->recipient_id;
+
+            $isDispatched = $this->admin
+                                ->superAdmin()
+                                ->dispatchReliefAsstOf($userId, $reliefGoodId, $recipientId);
+
+            $message = $this->prepareMessageResponse(
+                $isDispatched,
+                'The relief assistance has been dispatch',
+                'Approval and Collecting of the Relief Assistance are needed before dispatching'
+            );
+
+            $code = $this->prepareCodeResponse(
+                $isDispatched,
+                200,
+                406
+            );
+
+            $this->admin->onDispatchReliefAsstEvent(
+                $isDispatched,
+                User::find($userId),
+                User::find($recipientId),
+                ReliefGood::find($reliefGoodId)
+            );
+
+            return response()->json(
+            [
+                'from' => 'Dispatch Relief Assistance',
+                'user_id' => $userId,
+                'relief_good_id' => $reliefGoodId,
+                'message' => $message,
+            ], $code);
+        }
+
+    }
 
     /**
-     * Removing a user's/volunteers relief assistance
+     * Undocumented function
      *
-     * @param $request
-     * @return JSON
+     * @param Request $request
+     * @return void
      */
     public function removeReliefAsst(Request $request)
     {
@@ -136,6 +248,24 @@ class UserReliefManagementController extends Controller
                 'relief_good_id' => $request->relief_good_id
             ], 200);
         }
+    }
+
+    /**
+     * Undocumented function
+     *
+     * @param [type] $boolean
+     * @param string $successMessage
+     * @param string $errorMessage
+     * @return void
+     */
+    public function prepareMessageResponse($boolean, string $successMessage, string $errorMessage)
+    {
+        return $boolean ? $successMessage : $errorMessage;
+    }
+
+    public function prepareCodeResponse($boolean, int $successCode, int $errorCode)
+    {
+        return $boolean ? $successCode : $errorCode;
     }
 
 }

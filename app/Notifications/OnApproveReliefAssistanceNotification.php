@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ReliefGoodsSent extends Notification
+class OnApproveReliefAssistanceNotification extends Notification
 {
     use Queueable;
 
@@ -29,7 +29,7 @@ class ReliefGoodsSent extends Notification
      */
     public function via($notifiable)
     {
-        return ['mail', 'database'];
+        return ['mail'];
     }
 
     /**
@@ -41,11 +41,9 @@ class ReliefGoodsSent extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('Relief Goods Sent Successfully')
-                    ->greeting('Hello, ' . $notifiable->reliefGoodsSender())
-                    ->line('The help you sent to us was successfully processed.')
+                    ->line('The introduction to the notification.')
                     ->action('Notification Action', url('/'))
-                    ->line('Thank you for your help!');
+                    ->line('Thank you for using our application!');
     }
 
     /**

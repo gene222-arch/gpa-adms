@@ -10,16 +10,16 @@ import { toFormData, route } from '../../components/Helpers/FormData.js'
 /**
  * Fetch a lists
  */
-export const index = async () =>
+export const fetchReliefAsstLists = async () =>
 {
     return await Axios.get(route('/vol.relief-assistance'))
         .then(res => res.data)
         .catch(err => err.response.data);
 };
 
-export const getConstituents = async () =>
+export const fetchRecipients = async () =>
 {
-    return await Axios.get(route('/vol.relief-assistance.constituents-lists'))
+    return await Axios.get(route('/vol.relief-assistance.recipients-lists'))
         .then(res => res.data)
         .catch(err => err.response.data);
 }
@@ -33,7 +33,7 @@ export const getConstituents = async () =>
  * Store
  * @param {*} payload
  */
-export const store = async (payload) =>
+export const saveReliefAsst = async (payload) =>
 {
     console.log(payload);
     return await Axios.post(route('/vol.relief-assistance.donate'), toFormData(payload))
@@ -64,7 +64,7 @@ export const store = async (payload) =>
  * Update
  * @param {*} payload
  */
-export const update = async (payload) =>
+export const renewReliefAsst = async (payload) =>
 {
     return await Axios.post(`/vol.relief-assistance?id=${ payload.id }`, toFormData(payload, 'PUT'))
         .then(res => console.log(res))
@@ -81,9 +81,9 @@ export const update = async (payload) =>
  * Delete
  * @param {*} id
  */
-export const destroy = async (id) =>
+export const removeReliefAsst = async (id) =>
 {
-    return await Axios.delete(`/vol.relief-assistance?id=${ id }`,)
+    return await Axios.delete(`/vol/relief-assistance/${ id }`)
         .then(res => true)
         .catch(err => err.response.data);
 };

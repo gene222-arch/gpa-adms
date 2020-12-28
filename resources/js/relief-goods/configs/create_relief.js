@@ -27,7 +27,7 @@ export default
             name: 'to',
             type: 'select',
             label: 'To',
-            optionDefault: 'Donate to...',
+            optionDefaultValue: 'Donate to...',
             className: 'form-control'
         },
 
