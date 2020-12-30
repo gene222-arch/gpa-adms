@@ -11,11 +11,10 @@ import Button from '../Buttons/Button'
  * @param { options } array
  */
 
-const AutoForm = ({ form, onSubmit, errorMessages, options }) =>
+const AutoForm = ({ form, onSubmit, errorMessages, options = []  }) =>
 {
 
     console.log('Render Auto Form');
-
     /**
      * Returns an array of objects
      */
@@ -23,6 +22,7 @@ const AutoForm = ({ form, onSubmit, errorMessages, options }) =>
         ...field,
         value: '',
     })));
+
 
     /**
      * @function handleOnChange
@@ -34,9 +34,9 @@ const AutoForm = ({ form, onSubmit, errorMessages, options }) =>
         const { name, value } = e.target;
 
         const newData = fields.map(field =>
-            field.name === name
-                ? { ...field, value }
-                : field);
+        field.name === name
+            ? { ...field, value }
+            : field);
 
         setFields(newData);
     };
@@ -49,15 +49,15 @@ const AutoForm = ({ form, onSubmit, errorMessages, options }) =>
     const handleOnSubmit = (e) =>
     {
         e.preventDefault();
-        const formData = fields.reduce((fields, field) =>
+        const payload = fields.reduce((fields, field) =>
         {
            return {  ...fields, [field.name] : field.value }
         }, {});
 
         /**
-         * @argument object
+         * On submit, pass the accumulated data to the custom function/function
          */
-        onSubmit(formData);
+        onSubmit(payload);
 
         if (! Object.keys(errorMessages).length)
         {
@@ -86,10 +86,10 @@ const AutoForm = ({ form, onSubmit, errorMessages, options }) =>
                         options={ options }
                     />
             )}
-            <Button
-                className='btn-success'
-                btnName='Submit'
-                />
+                    <Button
+                        className='btn-success'
+                        btnName='Submit'
+                    />
             </form>
         </>
     )

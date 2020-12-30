@@ -53,36 +53,39 @@ class User extends Authenticatable
 
 
     /**
-     * belongsToMany Relationship with 'relief_good' table
+     * belongsToMany Relationship with 'reliefGoods' table
      * idName: 'user_id'
      * reliefGoodIdName: 'relief_id'
      *
      * @return type Many to Many
      */
-    public function relief_goods()
+    public function reliefGoods()
     {
         return $this->belongsToMany(
             ReliefGood::class,
-            'user_relief_good'
+            'user_relief_good',
+            'user_id',
+            'relief_good_id'
             )
                     ->withPivot(
+                        'id',
                         'recipient_id',
                         'is_approved', 'approved_at',
                         'is_received', 'received_at',
-                        'is_sent', 'sent_at'
+                        'is_dispatched', 'dispatched_at'
                     )
                     ->orderByPivot('created_at', 'desc')
                     ->withTimestamps();
     }
 
     /**
-     * belongsToMany Relationship with 'relief_good' table
+     * belongsToMany Relationship with 'reliefGoods' table
      * idName: 'recipient_id'
      * reliefGoodIdName: 'relief_id'
      *
      * @return type Many to Many
      */
-    public function relief_goods_by_recipients()
+    public function reliefGoodsByRecipients()
     {
         return $this->belongsToMany(
             ReliefGood::class,
@@ -91,8 +94,8 @@ class User extends Authenticatable
             'relief_good_id'
             )
                     ->withPivot(
-                        'user_id',
-                        'is_sent', 'sent_at'
+                        'id', 'user_id',
+                        'is_dispatched', 'dispatched_at'
                     )
                     ->with('users')
                     ->withTimestamps()

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Traits\Admins;
+namespace App\Traits\SuperAdmin;
 
 use App\Models\User;
 
@@ -32,8 +32,8 @@ trait SuperAdminServices
     public function getUsersWithReliefAssistance()
     {
         return $this->user
-                    ->has('relief_goods')
-                    ->with('relief_goods')
+                    ->has('reliefGoods')
+                    ->with('reliefGoods')
                     ->whereHas('roles', fn($q) => $q->where('name', 'volunteer'))
                     ->orderBy('created_at', 'desc')
                     ->get();
@@ -48,8 +48,9 @@ trait SuperAdminServices
     {
         return \boolval($this->user
                                 ->find($userId)
-                                ->relief_goods()
-                                ->wherePivot('is_sent', false)
+                                ->reliefGoods()
+                                ->wherePivot('is_dispatched', false)
+                                ->wherePivot('is_received', false)
                                 ->updateExistingPivot($reliefGoodId,
                                 [
                                     'is_approved' => true,
@@ -67,8 +68,9 @@ trait SuperAdminServices
     {
         return \boolval($this->user
                                 ->find($userId)
-                                ->relief_goods()
-                                ->wherePivot('is_sent', false)
+                                ->reliefGoods()
+                                ->wherePivot('is_dispatched', false)
+                                ->wherePivot('is_received', false)
                                 ->updateExistingPivot($reliefGoodId,
                                 [
                                     'is_approved' => false,
@@ -86,8 +88,8 @@ trait SuperAdminServices
     {
         return \boolval($this->user
                             ->find($userId)
-                            ->relief_goods()
-                            ->wherePivot('is_sent', false)
+                            ->reliefGoods()
+                            ->wherePivot('is_dispatched', false)
                             ->wherePivot('is_approved', true)
                             ->updateExistingPivot($reliefGoodId,
                             [
@@ -107,8 +109,8 @@ trait SuperAdminServices
     {
         return $this->user
                     ->find($userId)
-                    ->relief_goods()
-                    ->wherePivot('is_sent', false)
+                    ->reliefGoods()
+                    ->wherePivot('is_dispatched', false)
                     ->wherePivot('is_approved', true)
                     ->updateExistingPivot($reliefGoodId,
                     [
@@ -120,27 +122,49 @@ trait SuperAdminServices
 
 
     /**
-     * Setting the is_sent value to true after the admin notify the users that the R.A was received
+     * Setting the is_dispatched value to true after the admin notify the users that the R.A was received
      *
-     * @param [int] $userId
+     * @param [int] $volunteerId
      * @param [int] $reliefAsstId
-     * @return void
+     * @return boolean
      */
-    public function dispatchReliefAsstOf($userId, $reliefGoodId, $recipientId)
+    public function dispatchReliefAsstOf($volunteerId, $reliefGoodId, $recipientId, $dispatchAt): bool
     {
-        return $this->user
-                    ->find($userId)
-                    ->relief_goods()
+        return \boolval($this->user
+                    ->find($volunteerId)
+                    ->reliefGoods()
                     ->wherePivot('is_approved', true)
                     ->wherePivot('is_received', true)
                     ->wherePivot('recipient_id', $recipientId)
                     ->updateExistingPivot($reliefGoodId,
                     [
-                        'is_sent' => true,
-                        'sent_at' => now()
-                    ]);
+                        'is_dispatched' => true,
+                        'dispatched_at' => $dispatchAt
+                    ]));
     }
 
+
+    /**
+     * Setting the is_dispatched value to true after the admin notify the users that the R.A was received
+     *
+     * @param [int] $userId
+     * @param [int] $reliefAsstId
+     * @return boolean
+     */
+    public function undispatchReliefAsstOf($userId, $reliefGoodId, $recipientId): bool
+    {
+        return \boolval($this->user
+                    ->find($userId)
+                    ->reliefGoods()
+                    ->wherePivot('is_approved', true)
+                    ->wherePivot('is_received', true)
+                    ->wherePivot('recipient_id', $recipientId)
+                    ->updateExistingPivot($reliefGoodId,
+                    [
+                        'is_dispatched' => false,
+                        'dispatched_at' => NULL
+                    ]));
+    }
     /**
      * Getting all the users with dispatched relief asst
      *
@@ -149,11 +173,11 @@ trait SuperAdminServices
     public function getDispatchedReliefAsst()
     {
         return $this->user
-                    ->whereHas('relief_goods', fn($q) => $q->where(
+                    ->whereHas('reliefGoods', fn($q) => $q->where(
                     [
                         'is_approved' => true,
                         'is_received' => true,
-                        'is_sent' => true
+                        'is_dispatched' => true
                     ]))
                     ->get();
     }
@@ -166,10 +190,10 @@ trait SuperAdminServices
     public function undispatchReliefAsst()
     {
         return $this->user
-                    ->whereHas('relief_goods', fn($q) => $q->where(
+                    ->whereHas('reliefGoods', fn($q) => $q->where(
                     [
                         'is_approved' => false,
-                        'is_sent' => false
+                        'is_dispatched' => false
                     ]))
                     ->get();
     }
@@ -185,7 +209,7 @@ trait SuperAdminServices
     {
         return $this->user
                     ->find($userId)
-                    ->relief_goods()
+                    ->reliefGoods()
                     ->detach($reliefGoodId);
     }
 

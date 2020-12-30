@@ -7,9 +7,9 @@ use App\Http\Controllers\Auth\Admin\LoginController as AdminLoginCtrl;
 use App\Http\Controllers\Auth\Admin\RegisterController as AdminRegisterCtrl;
 use App\Http\Controllers\Auth\Admin\ForgotPasswordController as AdminForgotPasswordCtrl;
 use App\Http\Controllers\Auth\Admin\ResetPasswordController as AdminResetPasswordCtrl;
-use App\Http\Controllers\Admin\DashboardController as AdminDashboardCtrl;
-use App\Http\Controllers\Admin\UserManagementController;
-use App\Http\Controllers\Admin\UserReliefManagementController;
+use App\Http\Controllers\SuperAdmin\DashboardController as AdminDashboardCtrl;
+use App\Http\Controllers\SuperAdmin\UserManagementController;
+use App\Http\Controllers\SuperAdmin\UserReliefManagementController;
 use App\Http\Controllers\User\VolunteerController;
 use App\Http\Controllers\User\RecipientController;
 use App\Http\Controllers\User\RecipientPageController;
@@ -228,6 +228,8 @@ Route::group([
                 [ UserReliefManagementController::class, 'relieveReceivedReliefAsst' ]);
 
             Route::put('/relief-assistance-mngmt/volunteers/dispatch', [UserReliefManagementController::class, 'dispatchReliefAsst']);
+
+            Route::put('/relief-assistance-mngmt/volunteers/undispatch',  [UserReliefManagementController::class, 'undispatchReliefAsst']);
 
             Route::delete('/relief-assistance-mngmt/volunteers',
                 [ UserReliefManagementController::class, 'removeReliefAsst' ]);

@@ -1,21 +1,43 @@
-import React from 'react'
+import React, { useState } from 'react'
 
-const Pagination = ({ dataCountPerPage,  totalCountOfData, paginate, nextPage, prevPage, currentPage }) =>
+const Pagination = (props) =>
 {
-    const pageNumbers = [];
+    console.log('Render PAginateion');
+    console.log(`First: ${ props.indexOfFirstPage } - Last: ${props.indexOfLastPage}`);
 
-    for (let index = 1; index <= Math.ceil(totalCountOfData / dataCountPerPage); index++)
+    const [ activePage, setActivePage ] = useState(1);
+    let pageNumbers = [];
+
+    for (let index = 1; index <= Math.ceil(props.totalCountOfData / props.dataCountPerPage); index++)
     {
-        pageNumbers.push(index)
+        pageNumbers.push(index);
     }
 
-    const lastPageNum = () => pageNumbers[pageNumbers.length - 1];
+    if (activePage === (props.indexOfFirstPage + 1)/props.dataCountPerPage)
+    {
+        pageNumbers = pageNumbers.slice(0, 10);
+    }
+
+    if (activePage === (props.indexOfLastPage/props.dataCountPerPage))
+    {
+        pageNumbers = pageNumbers.slice(activePage, activePage + 10);
+    }
+
+
+    const nextPage = () => {
+        props.paginate(props.currentPage + 1)
+        setActivePage(props.currentPage + 1);
+    };
+    const prevPage = () => {
+        props.paginate(props.currentPage - 1)
+        setActivePage(props.currentPage - 1);
+    };
+    console.log(activePage);
+
     const isPageNumberEmpty = () => Boolean(!pageNumbers.length);
-    const isLastPage = () => currentPage === lastPageNum() || isPageNumberEmpty() ? 'disabled' : '';
-    const isFirstPage = () => currentPage === 1 || isPageNumberEmpty() ? 'disabled' : '';
-    const isCurrentPage = (pageNumber) => pageNumber === currentPage ? 'active' : '' ;
-    const toFirstPageOnPrevious = (currentPage) => currentPage === lastPageNum() ? paginate(lastPageNum()) : '';
-    const toLastPageOnNext = (currentPage) => currentPage === 1 ? paginate(1) : '';
+    const isLastPage = () => props.currentPage === props.indexOfLastPage || isPageNumberEmpty() ? 'disabled' : '';
+    const isFirstPage = () => props.currentPage === props.indexOfFirstPage || isPageNumberEmpty() ? 'disabled' : '';
+    const isCurrentPage = (pageNumber) => pageNumber === activePage ? 'active' : '';
 
     return (
         <nav aria-label="">
@@ -31,7 +53,10 @@ const Pagination = ({ dataCountPerPage,  totalCountOfData, paginate, nextPage, p
                 { pageNumbers.map(pageNumber => (
                     <li className={ `page-item ${ isCurrentPage(pageNumber) }` } key={ pageNumber }>
                         <a
-                            onClick={() => paginate(pageNumber)}
+                            onClick={() => {
+                                props.paginate(pageNumber)
+                                setActivePage(pageNumber);
+                            }}
                             href="#!"
                             className='page-link'>
                             { pageNumber }

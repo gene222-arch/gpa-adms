@@ -25,16 +25,9 @@ class ReliefGoodFactory extends Factory
             'category' => $this->faker->name,
             'name' => $this->faker->name,
             'quantity' => rand(1, 20),
-            'to' => $this->faker->name
+            'to' => $this->faker->name,
         ];
     }
 
-    public function funcName()
-    {
-        return $this->state([
-            'category' => 'new Value',
-            'name' => 'new Name'
-        ]);
-    }
 
 }

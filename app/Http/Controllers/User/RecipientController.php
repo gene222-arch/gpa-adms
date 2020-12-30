@@ -18,7 +18,7 @@ class RecipientController extends Controller
     {
         if ($request->wantsJson())
         {
-            return response()->json($request->user()->relief_goods_by_recipients, 200);
+            return response()->json($request->user()->reliefGoodsByRecipients, 200);
         }
 
         return view('users.recipients.received-relief-asst-lists');

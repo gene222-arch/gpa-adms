@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use App\Traits\Admins\SuperAdminEvents;
-use App\Traits\Admins\SuperAdminNotification;
-use App\Traits\Admins\SuperAdminServices;
+use App\Traits\SuperAdmin\SuperAdminEvents;
+use App\Traits\SuperAdmin\SuperAdminNotification;
+use App\Traits\SuperAdmin\SuperAdminServices;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;

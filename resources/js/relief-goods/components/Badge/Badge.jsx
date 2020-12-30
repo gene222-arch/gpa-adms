@@ -18,7 +18,7 @@ const Badge = (props) =>
     };
 
     return  (
-            <span className={ `badge bg-${ props.className }` }>
+            <span className={ props.className }>
                 { props.icon
                     ?  <i className={ `${ icon() } p-2` }></i>
                     : props.badgeName

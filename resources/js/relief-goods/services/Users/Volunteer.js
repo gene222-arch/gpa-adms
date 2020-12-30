@@ -10,6 +10,15 @@ import { toFormData, route } from '../../components/Helpers/FormData.js'
 /**
  * Fetch a lists
  */
+export const fetchAuthenticatedUser = async () =>
+{
+    return await Axios.get('/auth-user')
+        .then(res => res.data)
+        .catch(err => err.response.data);
+};
+/**
+ * Fetch a lists
+ */
 export const fetchReliefAsstLists = async () =>
 {
     return await Axios.get(route('/vol.relief-assistance'))

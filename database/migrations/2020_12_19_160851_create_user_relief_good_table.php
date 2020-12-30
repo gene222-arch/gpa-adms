@@ -20,10 +20,10 @@ class CreateUserReliefGoodTable extends Migration
             $table->foreignId('recipient_id');
             $table->boolean('is_approved')->default(false);
             $table->boolean('is_received')->default(false);
-            $table->boolean('is_sent')->default(false);
+            $table->boolean('is_dispatched')->default(false);
             $table->timestamp('approved_at')->nullable();
             $table->timestamp('received_at')->nullable();
-            $table->timestamp('sent_at')->nullable();
+            $table->timestamp('dispatched_at')->nullable();
             $table->timestamps();
 
             // unique id's

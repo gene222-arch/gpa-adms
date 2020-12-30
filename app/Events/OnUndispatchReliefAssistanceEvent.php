@@ -13,7 +13,7 @@ use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 
-class OnRemoveReliefAssistanceEvent implements ShouldBroadcastNow
+class OnUndispatchReliefAssistanceEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -29,8 +29,8 @@ class OnRemoveReliefAssistanceEvent implements ShouldBroadcastNow
     public function __construct(User $volunteer, User $recipient, ReliefGood $reliefGood)
     {
         $this->volunteer = $volunteer;
-        $this->recipient = $recipient;
         $this->reliefGood = $reliefGood;
+        $this->recipient = $recipient;
     }
 
     /**
@@ -41,17 +41,18 @@ class OnRemoveReliefAssistanceEvent implements ShouldBroadcastNow
     public function broadcastOn()
     {
         return [
-            new PrivateChannel('rcpt.relief-asst.receive.' . $this->recipient->id), // Recipient,
-            new PrivateChannel('vol.relief-mngmt.on-process-and-create.' . $this->volunteer->id), // Volunteer
-            new PrivateChannel('admin.dashboard.relief-assistance-mngmt.volunteers.1') //Super Admin,
+            new PrivateChannel('rcpt.relief-asst.receive.' . $this->recipient->id),
+            // Create channel for volunteer
         ];
     }
 
     public function broadcastWith()
     {
+        $reliefAsst = $this->recipient->reliefGoodsByrecipients->first();
+
         return [
-            'recipient_id' => $this->recipient->id,
-            'relief_good_id' => $this->reliefGood->id
+            'relief_good_id' => $this->reliefGood->id,
+            'dispatched_at' => $reliefAsst->pivot->dispatched_at
         ];
     }
 }

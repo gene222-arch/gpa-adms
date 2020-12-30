@@ -24,7 +24,8 @@ trait VolunteerServices
      */
     public function giveReliefAssistanceTo($reliefGood, $recipient_id): bool
     {
-        return \boolval($this->relief_goods()->attach($reliefGood, [ 'recipient_id' => $recipient_id ]));
+        $reliefGood = is_array($reliefGood) ? $reliefGood : $reliefGood;
+        return !\boolval($this->reliefGoods()->attach($reliefGood, [ 'recipient_id' => $recipient_id ]));
     }
 
     /**
@@ -34,7 +35,7 @@ trait VolunteerServices
      */
     public function removeReliefAssistanceTo($reliefAsstId): bool
     {
-        return \boolval($this->relief_goods()->detach($reliefAsstId));
+        return \boolval($this->reliefGoods()->detach($reliefAsstId));
     }
 
     /**
@@ -44,7 +45,7 @@ trait VolunteerServices
      */
     public function getLastCreatedReliefAsst()
     {
-        return $this->relief_goods()
+        return $this->reliefGoods()
                     ->with('users')
                     ->latest()
                     ->get()
@@ -53,7 +54,7 @@ trait VolunteerServices
 
     public function findReliefAsst($reliefAsstId)
     {
-        return $this->relief_goods()
+        return $this->reliefGoods()
                     ->with('users')
                     ->wherePivot('relief_good_id', $reliefAsstId)
                     ->get()
@@ -67,7 +68,7 @@ trait VolunteerServices
      */
     public function approvedReliefAssistance()
     {
-        return $this->relief_goods()
+        return $this->reliefGoods()
                     ->wherePivot('is_approved', true)
                     ->get();
     }
@@ -77,7 +78,7 @@ trait VolunteerServices
      */
     public function reliefAssistanceToSend()
     {
-        return $this->relief_goods()
+        return $this->reliefGoods()
                     ->wherePivot('is_approved', true)
                     ->wherePivot('is_received', true)
                     ->get();
@@ -90,8 +91,8 @@ trait VolunteerServices
      */
     public function onProcessReliefAssistance()
     {
-        return $this->relief_goods()
-                    ->where('is_sent', false)
+        return $this->reliefGoods()
+                    ->where('is_dispatched', false)
                     ->get();
     }
 

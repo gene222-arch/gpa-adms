@@ -3,19 +3,24 @@ import ErrorMessage from '../Messages/ErrorMessage'
 
 /**
  * @function Field
- * @param fields array
+ * @param fields object
  * @param onChange event
  * @param errorMessages array
+ * @param options
  */
-const Field = ({field, onChange, errorMessages = {}, options}) =>
+const Field = ({field, onChange, errorMessages = {}, options = []}) =>
 {
     console.log('Render Field');
 
     const { label, optionDefaultValue, ...attributes } = field;
+    /**
+     * To array the fieldName in the errorMessages object
+     */
     const errorMessagesKeys = Object.keys(errorMessages);
 
     /**
      * ! Error Messages Configuration
+     * @param elementName
      */
     const isErrorExists = (elementName) => errorMessagesKeys.find(errKey => errKey === elementName);
 
@@ -28,6 +33,7 @@ const Field = ({field, onChange, errorMessages = {}, options}) =>
             ? 'form-control is-invalid'
             : 'form-control';
     };
+
 
     /**
      * Fetching the corresponding error message
@@ -75,7 +81,6 @@ const Field = ({field, onChange, errorMessages = {}, options}) =>
                         return <input { ...attributes }
                             className={ setIsInvalid(attributes.name) }
                             onChange={ onChange }/>
-                        break;
                 }
             })()}
 

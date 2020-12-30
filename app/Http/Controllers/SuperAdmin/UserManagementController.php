@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -23,14 +23,14 @@ class UserManagementController extends Controller
 
     public function showUserWithRoles()
     {
-        return view('admins.user-magement.roles', [
+        return view('admins.super-admin.user-magement.roles', [
             'roles' => Role::all(),
         ]);
     }
 
     public function showUserWithPermissions()
     {
-        return view('admins.user-magement.permissions', [
+        return view('admins.super-admin.user-magement.permissions', [
             'permissions' => Permission::all()->map->name
         ]);
     }

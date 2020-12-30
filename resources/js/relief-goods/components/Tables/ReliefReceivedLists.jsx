@@ -80,11 +80,11 @@ const ReliefReceivedLists = (props) =>
                                         {
                                             Array.isArray(reliefList.users)
                                                 ? reliefList.users.map(user => user.name)
-                                                : [ reliefList.users ].map(user => user.name)
+                                                : reliefList.userName
                                         }
                                     </td>
                                     <td>{ reliefList.created_at.slice(0, 10) }</td>
-                                    <td>{ reliefList.pivot.sent_at ??= 'Soon' }</td>
+                                    <td>{ reliefList.pivot.dispatched_at ??= 'Soon' }</td>
                                     <td>
                                         <ModalButton
                                             className={ 'btn btn-info' }

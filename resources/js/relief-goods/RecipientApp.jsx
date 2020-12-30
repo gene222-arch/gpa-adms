@@ -101,17 +101,32 @@ const RecipientApp = () =>
         Echo.private(`rcpt.relief-asst.receive.${ authenticatedUser.id }`)
             .listen('OnDispatchReliefAssistanceEvent', (result) =>
             {
-                const newData = receivedReliefAsst.map(data =>
-                {
-                    if ( data.id === result.relief_good_id)
-                    {
-                        data.pivot.sent_at = result.sent_at;
-                        console.log(data);
-                    }
-                    return data;
-                });
+                const newData = receivedReliefAsst
+                    .map(data => {
+                        if (data.id === result.relief_good_id)
+                        {
+                            data.pivot.dispatched_at = result.dispatched_at
+                        }
+                        return data;
+                    })
 
                 setReceivedReliefAsst(newData);
+            });
+    }
+
+    const listenToUndispatchReliefAsstEvent = () =>
+    {
+        Echo.private(`rcpt.relief-asst.receive.${ authenticatedUser.id }`)
+            .listen('OnUndispatchReliefAssistanceEvent', (result) =>
+            {
+                setReceivedReliefAsst(prevVal =>
+                    prevVal.map(data => {
+                        if (data.id === result.relief_good_id)
+                        {
+                            data.pivot.dispatched_at = 'Soon'
+                        }
+                        return data;
+                }));
             });
     }
 
@@ -132,6 +147,7 @@ const RecipientApp = () =>
         listenToNewReliefAsstEvent();
         listenToRemoveReliefAsstEvent();
         listenToDispatchReliefAsstEvent();
+        listenToUndispatchReliefAsstEvent();
     }, [authenticatedUser]);
 
 

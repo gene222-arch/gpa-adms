@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Traits\Admins;
+namespace App\Traits\SuperAdmin;
 
-use App\Events\OnDispatchReliefAssistanceEvent;
 use App\Notifications\AdminResetPasswordNotification;
 use App\Notifications\OnApproveReliefAssistanceNotification;
+use App\Notifications\OnDispatchReliefAssistanceNotification;
 use App\Notifications\OnReceiveReliefAssistanceNotification;
 
 trait SuperAdminNotification
@@ -54,7 +54,7 @@ trait SuperAdminNotification
      */
     public function notifyUserOnDispatchReliefAsst($userId)
     {
-        $this->user->find($userId)->notify(new OnDispatchReliefAssistanceEvent());
+        $this->user->find($userId)->notify(new OnDispatchReliefAssistanceNotification());
     }
 
 }

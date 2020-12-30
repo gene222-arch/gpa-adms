@@ -6,10 +6,12 @@ import {
     reliefAsstHasReceived,
     relieveReceivedReliefAsst,
     dispatchReliefAsst,
+    undispatchReliefAsst,
     removeReliefAssistance,
 } from './services/Admin'
-import AdminReliefAsstLists from './components/Tables/AdminReliefAsstLists'
+import AdminReliefAsstLists from './components/Tables/AdminTables/VolunteerReliefAsstLists'
 import * as Alert from '../relief-goods/components/Helpers/Alert.js'
+import Swal from 'sweetalert2';
 
 /**
  * Todo fix admin pagination
@@ -17,14 +19,34 @@ import * as Alert from '../relief-goods/components/Helpers/Alert.js'
 
 const AdminApp = () =>
 {
-    const [ usersReliefLists, setUsersReliefLists ] = useState([]);
-    const [ recipientId, setRecipientId ] = useState(null);
+    const [ usersReliefAssistance, setUsersReliefAssistance ] = useState([]);
+    const [ errorMessages, setErrorMessages ] = useState({});
+    //!end
+
+    /**
+     * Dispatch States
+     */
+    const [ dispatchUserId, setDispatchUserId ] = useState(0);
+    const [ dispatchReliefGoodId, setDispatchReliefGoodId ] = useState(0);
+    const [ dispatchRecipientId, setDispatchRecipientId ] = useState(0);
+    const [ dispatchDate, setDispatchDate ] = useState('');
+    //!end
+
     const [ loading, setLoading ] = useState(false);
+    //!end
 
+    /**
+     * Modal States
+     */
+    const [ isModalOpen, setModalIsOpen ] = useState(false);
+
+    /**
+     * Pagination States
+     */
     const [ currentPage, setCurrentPage ] = useState(1);
-    const [ dataCountPerPage ] = useState(2);
-    const [ reliefListsTotalCount, setReliefListsTotalCount ] = useState(0);
-
+    const [ dataCountPerPage ] = useState(5);
+    const [ reliefAssistanceCount, setReliefAssistanceCount ] = useState(0);
+    //!end
 
     /*
     |--------------------------------------------------------------------------
@@ -37,27 +59,44 @@ const AdminApp = () =>
      *
      * @returns @void
      */
-    const getUsersWithReliefAsst = async () =>
+    const getUsersWithReliefAsst = async (shouldLoad) =>
     {
-        setLoading(true);
         const result = await fetchUserWithReliefAssistance();
+        const data = [];
 
-        if (result.length)
-        {
-            setUsersReliefLists(result)
-            // Set pagination data count per page
-            let totalReliefLists = result
-                .map(res => res.relief_goods.length)
-                .reduce((accu, cur) => accu + cur);
+        result.forEach(user => {
+            result
+                .map(userData => userData.relief_goods)
+                .map(reliefGoods =>  // array
+                    reliefGoods
+                        .map(reliefGood =>
+                            data.push(Object.assign(reliefGood, {
+                                userId: user.id,
+                                userName: user.name,
+                            }))
+                        )
+                )
+        });
 
-        setReliefListsTotalCount(totalReliefLists);
-        }
-        else
-        {
-            setUsersReliefLists([]);
-        }
-        setLoading(false);
+        console.log(data);
+
+        setUsersReliefAssistance(data)
+        setReliefAssistanceCount(data.length);
     };
+
+    // const prepareShouldLoad = (shouldLoad, callback) =>
+    // {
+    //     if (shouldLoad)
+    //     {
+    //         setLoading(true);
+    //         callback();
+    //         setLoading(false);
+    //     }
+    //     else
+    //     {
+    //         callback();
+    //     }
+    // };
 
     /**
      * Approving a user's relief assistance
@@ -69,9 +108,9 @@ const AdminApp = () =>
     {
         const result = await approveUserReliefAssistance(payload);
 
-        result
+        result === true
             ? getUsersWithReliefAsst()
-            : Alert.onError();
+            : Alert.onError(result);
     }
 
     /**
@@ -84,9 +123,9 @@ const AdminApp = () =>
     {
         const result = await disApproveUserReliefAssistance(payload);
 
-        result
+        result === true
             ? getUsersWithReliefAsst()
-            : Alert.onError();
+            : Alert.onError(result);
     }
 
     /**
@@ -119,17 +158,58 @@ const AdminApp = () =>
 
     /**
      *
+     *
+     * @param {*} payload
+     */
+
+    const onClickShowDispatchModal = (payload) =>
+    {
+        openModal();
+
+        setDispatchUserId(payload.user_id);
+        setDispatchRecipientId(payload.recipient_id);
+        setDispatchReliefGoodId(payload.relief_good_id);
+    };
+
+    /**
+     *
+     * @param {*} e
+     */
+    const onChangeSetDispatchDate = (e) => setDispatchDate(e.target.value);
+
+    /**
+     *
      * @param {*} payload
      */
     const onClickDispatchReliefAsst = async (payload) =>
     {
         const result = await dispatchReliefAsst(payload);
+
+        if (result === true)
+        {
+            getUsersWithReliefAsst();
+            closeModal();
+        }
+        else
+        {
+            // Alert.onInfo(result);
+            setErrorMessages(result);
+        }
+    }
+
+
+
+    /**
+     *
+     * @param {*} payload
+     */
+    const onClickUndispatchReliefAsst = async (payload) =>
+    {
+        const result = await undispatchReliefAsst(payload);
         result === true
             ? getUsersWithReliefAsst()
             : Alert.onInfo(result);
     }
-
-
     /**
      * Removing a user's relief assistance
      *
@@ -138,10 +218,30 @@ const AdminApp = () =>
      */
     const onClickRemoveReliefAsst = async (payload) =>
     {
-        const result = await removeReliefAssistance(payload);
-        result
-            ? getUsersWithReliefAsst()
-            : Alert.onError();
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes, delete it!'
+            })
+            .then( async (result) => {
+                if (result.isConfirmed)
+                {
+                    const res = await removeReliefAssistance(payload);
+                    if (res)
+                    {
+                        Alert.onDelete();
+                        await getUsersWithReliefAsst();
+                    }
+                    else
+                    {
+                        Alert.onError();
+                    }
+                }
+            });
     };
 
 
@@ -150,14 +250,17 @@ const AdminApp = () =>
      * Todo Fix Pagination
      */
 
-    const indexOfLastPage = currentPage * dataCountPerPage; // 5, 10
+    const indexOfLastPage = currentPage * dataCountPerPage; // 1
     const indexOfFirstPage = indexOfLastPage - dataCountPerPage; // 1, 5
-    const currentPageList = usersReliefLists.slice(indexOfFirstPage, indexOfLastPage);
+    const currentPageList = usersReliefAssistance.slice(indexOfFirstPage, indexOfLastPage);
 
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
-    const nextPage = (currentPageNumber) => setCurrentPage(prevPageNumber => prevPageNumber + 1);
-    const prevPage = (currentPageNumber) => setCurrentPage(prevPageNumber => prevPageNumber - 1);
 
+    /**
+     * Modal
+     */
+    const openModal = () => setModalIsOpen(true);
+    const closeModal = () => setModalIsOpen(false);
 
     /**
      * Events
@@ -168,14 +271,11 @@ const AdminApp = () =>
         Echo.private('admin.dashboard.relief-assistance-mngmt.volunteers.1')
             .listen('NewReliefAssistanceEvent', (response) =>
             {
-                const fetch = async () =>
-                {
-                    const result = await fetchUserWithReliefAssistance();
-                    setUsersReliefLists(result);
-                };
-                fetch();
+                setUsersReliefAssistance(prevVal => [response, ...prevVal])
+                console.log(response);
             });
     };
+
 
     /**
      * ? Side Effects
@@ -183,29 +283,68 @@ const AdminApp = () =>
 
     useEffect(() =>
     {
-        getUsersWithReliefAsst();
+        getUsersWithReliefAsst(true);
+    }, []);
+
+    useEffect(() =>
+    {
         listenToNewReliefAsstEvent();
     }, []);
 
+    /**
+     * Todo
+     * Fix Pagination
+     */
 
     return (
         <div>
+            <div className="card">
+                <div className="card-body">
+
+                </div>
+            </div>
             <AdminReliefAsstLists
-                usersReliefLists={ currentPageList }
+                usersReliefAssistance={ currentPageList }
                 onClickApproveReliefAsst={ onClickApproveReliefAsst }
                 onClickDisapproveReliefAsst={ onClickDisapproveReliefAsst }
                 onClickReliefAsstHasReceived={ onClickReliefAsstHasReceived }
                 onClickRelieveReceivedReliefAsst={ onClickRelieveReceivedReliefAsst }
-                onClickDispatchReliefAsst= { onClickDispatchReliefAsst }
                 onClickRemoveReliefAsst={ onClickRemoveReliefAsst }
-                dataCountPerPage={ dataCountPerPage }
-                totalCountOfData={ reliefListsTotalCount }
-                paginate = { paginate }
-                nextPage = { nextPage }
-                prevPage = { prevPage }
-                currentPage = { currentPage }
+
+                // Dispatching
+                onClickShowDispatchModal= { onClickShowDispatchModal }
+                dispatchUserId= {  dispatchUserId }
+                dispatchReliefGoodId= { dispatchReliefGoodId }
+                dispatchRecipientId= { dispatchRecipientId }
+                dispatchDate={ dispatchDate }
+                onChangeSetDispatchDate={ onChangeSetDispatchDate }
+                onClickDispatchReliefAsst= { onClickDispatchReliefAsst }
+                onClickUndispatchReliefAsst= { onClickUndispatchReliefAsst }
+
+                // Error Messages
+                errorMessages={ errorMessages }
+
+                // Modal
+                openModal= { openModal }
+                closeModal= { closeModal }
+                isModalOpen={ isModalOpen }
                 loading={ loading }
-                />
+            >
+                {
+                    (loading && totalCountOfData)
+                        ?
+                            <Pagination
+                                dataCountPerPage={ dataCountPerPage }
+                                totalCountOfData={ reliefAssistanceCount }
+                                paginate = { paginate }
+                                indexOfLastPage = { indexOfLastPage }
+                                indexOfFirstPage = { indexOfFirstPage }
+                                currentPage = { currentPage }
+                            />
+                        :
+                            ''
+                }
+            </AdminReliefAsstLists>
         </div>
     )
 }

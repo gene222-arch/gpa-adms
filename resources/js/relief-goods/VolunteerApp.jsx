@@ -1,5 +1,5 @@
 import React,{ useState, useRef, useEffect } from 'react';
-import { fetchReliefAsstLists, fetchRecipients, saveReliefAsst, renewReliefAsst, removeReliefAsst } from './services/Users/Volunteer'
+import { fetchAuthenticatedUser, fetchReliefAsstLists, fetchRecipients, saveReliefAsst, renewReliefAsst, removeReliefAsst } from './services/Users/Volunteer'
 import createFormFields from './configs/create_relief'
 import AutoForm from './components/Forms/AutoForm'
 import ReliefSentList from './components/Tables/ReliefSentList';
@@ -12,6 +12,7 @@ const VolunteerApp = () =>
 
     const [ reliefAsstLists, setReliefAsstLists ] = useState([]); // Display
     const [ reliefAsst, setReliefAsst ] = useState({}); // Update
+    const [ authenticatedUser, setAuthenticatedUser ] = useState({});
     const [ recipients, setRecipients ] = useState([]); // Select options
     const [ errorMessages, setErrorMessages ] = useState({}); // Validation
     const [ navigate, setNavigate ] = useState('report-link'); // Navigation
@@ -33,6 +34,16 @@ const VolunteerApp = () =>
     /**
      *
      */
+
+    const getAuthenticatedUser = async () =>
+    {
+        const result = await fetchAuthenticatedUser();
+        result
+            ? setAuthenticatedUser(result)
+            : setAuthenticatedUser({});
+            console.log(result);
+    }
+
     const getReliefAsstLists = async () =>
     {
         setLoading(true); // Loading
@@ -127,24 +138,6 @@ const VolunteerApp = () =>
     }
 
 
-/** * * * * * * * * * * * * *
- * * Events
- * * * * * * * * * * * * * */
-
-    /**
-     *
-     */
-    const receivedReliefAsstEvent = () =>
-    {
-        Echo.channel('channelName')
-            .listen('OnReceiveReliefAssistanceEvent', (e) =>
-            {
-                console.log(e.message)
-                alert(e.message)
-            });
-    };
-
-
     /**
      * ! Add/Remove of class names
      */
@@ -172,6 +165,7 @@ const VolunteerApp = () =>
             addClassActive(createRef);
         }
     }
+
     const addClassActive = (elem) =>  elem.current.className += ' active';
     const removeClassActive = (elem) => elem.current.className = 'nav-link';
 
@@ -189,6 +183,40 @@ const VolunteerApp = () =>
     const nextPage = () => setCurrentPage(prevPageNumber => prevPageNumber + 1);
     const prevPage = () => setCurrentPage(prevPageNumber => prevPageNumber - 1 );
 
+    /**
+     * window.location.href.pathname == 'url'
+     * <ShowThisComponent />
+     *
+     */
+
+
+/** * * * * * * * * * * * * *
+ * * Events
+ * * * * * * * * * * * * * */
+
+    /**
+     *
+     */
+    const receivedReliefAsstEvent = () =>
+    {
+        Echo.channel('channelName')
+            .listen('OnReceiveReliefAssistanceEvent', (e) =>
+            {
+                console.log(e.message)
+                alert(e.message)
+            });
+    };
+
+    const listenToRemoveReliefAsstEvent = () =>
+    {
+        Echo.private(`vol.relief-mngmt.on-process-and-create.${ authenticatedUser.id }`)
+            .listen('OnRemoveReliefAssistanceEvent', (result) =>
+            {
+                setReliefAsstLists(prevVal =>
+                    prevVal.filter( reliefAsst =>
+                        reliefAsst.id != result.relief_good_id));
+            });
+    }
 
     /**
      * ? Side Effects
@@ -199,14 +227,19 @@ const VolunteerApp = () =>
     {
         setErrorMessages({});
         getReliefAsstLists();
-    }, [navigate])
+    }, [navigate]);
+
+
+    useEffect(() => {
+        getAuthenticatedUser();
+        getRecipients();
+    }, []);
 
     // Channels
     useEffect(() =>
     {
-        receivedReliefAsstEvent();
-        getRecipients();
-    }, []);
+        listenToRemoveReliefAsstEvent();
+    }, [authenticatedUser]);
 
 
     return (

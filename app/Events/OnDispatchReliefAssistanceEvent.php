@@ -48,11 +48,11 @@ class OnDispatchReliefAssistanceEvent implements ShouldBroadcastNow
 
     public function broadcastWith()
     {
-        $reliefAsst = $this->recipient->relief_goods_by_recipients->first();
+        $reliefAsst = $this->recipient->reliefGoodsByRecipients->first();
 
         return [
             'relief_good_id' => $this->reliefGood->id,
-            'sent_at' => $reliefAsst->pivot->sent_at
+            'dispatched_at' => $reliefAsst->pivot->dispatched_at
         ];
     }
 }

@@ -6,7 +6,7 @@ import AdminApp from './relief-goods/AdminApp'
 
 
 /**
- * Admin Components
+ * Admin Components in Laravel Blade
  */
 if (document.getElementById('volunteer-relief-assistance-mngmt'))
 {

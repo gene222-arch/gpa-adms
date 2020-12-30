@@ -48,25 +48,27 @@ class NewReliefAssistanceEvent implements ShouldBroadcastNow
     public function broadcastWith()
     {
         return [
-            'users' => [
-                'id' => $this->volunteer->id,
-                'name' => $this->volunteer->name,
-                'email' => $this->volunteer->email,
-            ],
+            // Volunteer/User Data
+            'userName' => $this->volunteer->name,
+            'userId' => $this->volunteer->id,
+
+            // Relief Good Data
             'id' => $this->reliefAssistanceInfo->id,
             'category' => $this->reliefAssistanceInfo->category,
             'name' => $this->reliefAssistanceInfo->name,
             'qty' => $this->reliefAssistanceInfo->quantity,
             'to' => $this->reliefAssistanceInfo->to,
             'created_at' => $this->reliefAssistanceInfo->created_at,
+
+            // user_relief_good pivot data
             'pivot' =>
             [
                 'id' => $this->reliefAssistanceInfo->pivot->id,
                 'user_id' => $this->reliefAssistanceInfo->pivot->user_id,
                 'relief_good_id' => $this->reliefAssistanceInfo->pivot->relief_good_id,
                 'recipient_id' => $this->reliefAssistanceInfo->pivot->recipient_id,
-                'is_sent' => $this->reliefAssistanceInfo->pivot->is_sent,
-                'sent_at' => $this->reliefAssistanceInfo->pivot->sent_at,
+                'is_dispatched' => $this->reliefAssistanceInfo->pivot->is_dispatched,
+                'dispatched_at' => $this->reliefAssistanceInfo->pivot->dispatched_at,
             ]
         ];
     }
@@ -82,7 +84,7 @@ class NewReliefAssistanceEvent implements ShouldBroadcastNow
  *
  * * Object data type
  * ? public
- * - One's the event is sent all of the properties with a public data type will be accessible
+ * - One's the event is dispatched all of the properties with a public data type will be accessible
  * ? private
  * - The opposite of a 'public' property type, this hides the property
  * * Channel

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Models\User;
 use App\Models\Admin;
@@ -34,10 +34,10 @@ class UserReliefManagementController extends Controller
     {
         if ($request->wantsJson())
         {
-            return response()->json($this->admin->superAdmin()->getUsersWithReliefAssistance());
+            return response()->json($this->admin->superAdmin()->getUsersWithReliefAssistance(), 200);
         }
 
-        return view('admins.user-relief-assistance-mngmt.volunteer');
+        return view('admins.super-admin.user-relief-assistance-mngmt.volunteer');
     }
 
     /**
@@ -92,7 +92,7 @@ class UserReliefManagementController extends Controller
             $message = $this->prepareMessageResponse(
                 $isDisapproved,
                 'Success',
-                'Failed'
+                'This relief assistance was already receive, disapproval is invalid'
             );
 
             $code = $this->prepareCodeResponse(
@@ -196,10 +196,11 @@ class UserReliefManagementController extends Controller
             $userId = $request->user_id;
             $reliefGoodId = $request->relief_good_id;
             $recipientId = $request->recipient_id;
+            $dispatchDate = $request->dispatched_at;
 
             $isDispatched = $this->admin
                                 ->superAdmin()
-                                ->dispatchReliefAsstOf($userId, $reliefGoodId, $recipientId);
+                                ->dispatchReliefAsstOf($userId, $reliefGoodId, $recipientId, $dispatchDate);
 
             $message = $this->prepareMessageResponse(
                 $isDispatched,
@@ -237,15 +238,81 @@ class UserReliefManagementController extends Controller
      * @param Request $request
      * @return void
      */
+    public function undispatchReliefAsst(Request $request)
+    {
+
+        if ($request->wantsJson())
+        {
+            $userId = $request->user_id;
+            $reliefGoodId = $request->relief_good_id;
+            $recipientId = $request->recipient_id;
+
+            $isDispatched = $this->admin
+                                ->superAdmin()
+                                ->undispatchReliefAsstOf($userId, $reliefGoodId, $recipientId);
+
+            $message = $this->prepareMessageResponse(
+                $isDispatched,
+                'Success',
+                'Fail'
+            );
+
+            $code = $this->prepareCodeResponse(
+                $isDispatched,
+                200,
+                406
+            );
+
+            $this->admin->onUndispatchReliefAsstEvent(
+                $isDispatched,
+                User::find($userId),
+                User::find($recipientId),
+                ReliefGood::find($reliefGoodId)
+            );
+
+            return response()->json(
+            [
+                'from' => 'Undispatch Relief Assistance',
+                'user_id' => $userId,
+                'relief_good_id' => $reliefGoodId,
+                'message' => $message,
+            ], $code);
+        }
+
+    }
+
+
+    /**
+     * Undocumented function
+     *
+     * @param Request $request
+     * @return void
+     */
     public function removeReliefAsst(Request $request)
     {
         if ($request->wantsJson())
         {
-            $isRemoved = $this->admin->superAdmin()->removeReliefAssistanceOf($request->user_id, $request->relief_good_id);
+            $userId = $request->user_id;
+            $reliefGoodId = $request->relief_good_id;
+            $recipientId = $request->recipient_id;
+
+            $isReliefAsstRemoved = $this->admin
+                ->superAdmin()
+                ->removeReliefAssistanceOf($userId, $reliefGoodId);
+
+            $this->admin
+                ->onRemoveReliefAsstEvent(
+                    $isReliefAsstRemoved,
+                    User::find($userId),
+                    User::find($recipientId),
+                    ReliefGood::find($reliefGoodId)
+                );
+
+
             return response()->json([
                 'from' => 'Remove Relief Assistance Controller',
-                'user_id' => $request->user_id,
-                'relief_good_id' => $request->relief_good_id
+                'user_id' => $userId,
+                'relief_good_id' => $reliefGoodId
             ], 200);
         }
     }

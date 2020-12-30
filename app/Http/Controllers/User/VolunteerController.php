@@ -46,7 +46,7 @@ class VolunteerController extends Controller
     }
 
     /**
-     * Show all the relief_goods created by the user
+     * Show all the reliefGoods created by the user
      *
      * @return JSON response
      */
@@ -54,7 +54,7 @@ class VolunteerController extends Controller
     {
         if ($request->wantsJson())
         {
-            return response()->json($request->user('web')->relief_goods);
+            return response()->json($request->user('web')->reliefGoods);
         }
     }
 

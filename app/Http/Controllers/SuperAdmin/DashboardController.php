@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\SuperAdmin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Admin;
@@ -25,6 +25,6 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        return view('admins.dashboard');
+        return view('admins.super-admin.dashboard');
     }
 }

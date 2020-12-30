@@ -19,7 +19,12 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
 
 Broadcast::channel('rcpt.relief-asst.receive.{id}', function ($user, $id) {
     return true;
-}, []);
+});
+
+Broadcast::channel('vol.relief-mngmt.on-process-and-create.{id}', function ($user, $id) {
+    return true;
+});
+
 
 Broadcast::channel('admin.dashboard.relief-assistance-mngmt.volunteers.{superAdminId}', function ($user, $id) {
     return true;
